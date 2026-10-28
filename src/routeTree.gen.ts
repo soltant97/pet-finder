@@ -10,33 +10,182 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BorttappadeRouteImport } from './routes/borttappade'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedInstallningarRouteImport } from './routes/_authenticated/installningar'
+import { Route as AuthenticatedNotiserRouteImport } from './routes/_authenticated/notiser'
+import { Route as AuthenticatedOversiktRouteImport } from './routes/_authenticated/oversikt'
+import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
+import { Route as AuthenticatedRegistreraRouteImport } from './routes/_authenticated/registrera'
+import { Route as AuthenticatedUpphittatRouteImport } from './routes/_authenticated/upphittat'
+import { Route as AuthenticatedMinaDjurIndexRouteImport } from './routes/_authenticated/mina-djur.index'
+import { Route as AuthenticatedMinaDjurIdRouteImport } from './routes/_authenticated/mina-djur.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BorttappadeRoute = BorttappadeRouteImport.update({
+  id: '/borttappade',
+  path: '/borttappade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedInstallningarRoute =
+  AuthenticatedInstallningarRouteImport.update({
+    id: '/installningar',
+    path: '/installningar',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedNotiserRoute = AuthenticatedNotiserRouteImport.update({
+  id: '/notiser',
+  path: '/notiser',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedOversiktRoute = AuthenticatedOversiktRouteImport.update({
+  id: '/oversikt',
+  path: '/oversikt',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfilRoute = AuthenticatedProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedRegistreraRoute = AuthenticatedRegistreraRouteImport.update({
+  id: '/registrera',
+  path: '/registrera',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedUpphittatRoute = AuthenticatedUpphittatRouteImport.update({
+  id: '/upphittat',
+  path: '/upphittat',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMinaDjurIndexRoute =
+  AuthenticatedMinaDjurIndexRouteImport.update({
+    id: '/mina-djur/',
+    path: '/mina-djur/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMinaDjurIdRoute = AuthenticatedMinaDjurIdRouteImport.update({
+  id: '/mina-djur/$id',
+  path: '/mina-djur/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/borttappade': typeof BorttappadeRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/installningar': typeof AuthenticatedInstallningarRoute
+  '/notiser': typeof AuthenticatedNotiserRoute
+  '/oversikt': typeof AuthenticatedOversiktRoute
+  '/profil': typeof AuthenticatedProfilRoute
+  '/registrera': typeof AuthenticatedRegistreraRoute
+  '/upphittat': typeof AuthenticatedUpphittatRoute
+  '/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
+  '/mina-djur/': typeof AuthenticatedMinaDjurIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/borttappade': typeof BorttappadeRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/installningar': typeof AuthenticatedInstallningarRoute
+  '/notiser': typeof AuthenticatedNotiserRoute
+  '/oversikt': typeof AuthenticatedOversiktRoute
+  '/profil': typeof AuthenticatedProfilRoute
+  '/registrera': typeof AuthenticatedRegistreraRoute
+  '/upphittat': typeof AuthenticatedUpphittatRoute
+  '/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
+  '/mina-djur': typeof AuthenticatedMinaDjurIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/borttappade': typeof BorttappadeRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/installningar': typeof AuthenticatedInstallningarRoute
+  '/_authenticated/notiser': typeof AuthenticatedNotiserRoute
+  '/_authenticated/oversikt': typeof AuthenticatedOversiktRoute
+  '/_authenticated/profil': typeof AuthenticatedProfilRoute
+  '/_authenticated/registrera': typeof AuthenticatedRegistreraRoute
+  '/_authenticated/upphittat': typeof AuthenticatedUpphittatRoute
+  '/_authenticated/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
+  '/_authenticated/mina-djur/': typeof AuthenticatedMinaDjurIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/borttappade'
+    | '/reset-password'
+    | '/installningar'
+    | '/notiser'
+    | '/oversikt'
+    | '/profil'
+    | '/registrera'
+    | '/upphittat'
+    | '/mina-djur/$id'
+    | '/mina-djur/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/borttappade'
+    | '/reset-password'
+    | '/installningar'
+    | '/notiser'
+    | '/oversikt'
+    | '/profil'
+    | '/registrera'
+    | '/upphittat'
+    | '/mina-djur/$id'
+    | '/mina-djur'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/borttappade'
+    | '/reset-password'
+    | '/_authenticated/installningar'
+    | '/_authenticated/notiser'
+    | '/_authenticated/oversikt'
+    | '/_authenticated/profil'
+    | '/_authenticated/registrera'
+    | '/_authenticated/upphittat'
+    | '/_authenticated/mina-djur/$id'
+    | '/_authenticated/mina-djur/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  BorttappadeRoute: typeof BorttappadeRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +197,124 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/borttappade': {
+      id: '/borttappade'
+      path: '/borttappade'
+      fullPath: '/borttappade'
+      preLoaderRoute: typeof BorttappadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/installningar': {
+      id: '/_authenticated/installningar'
+      path: '/installningar'
+      fullPath: '/installningar'
+      preLoaderRoute: typeof AuthenticatedInstallningarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/notiser': {
+      id: '/_authenticated/notiser'
+      path: '/notiser'
+      fullPath: '/notiser'
+      preLoaderRoute: typeof AuthenticatedNotiserRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/oversikt': {
+      id: '/_authenticated/oversikt'
+      path: '/oversikt'
+      fullPath: '/oversikt'
+      preLoaderRoute: typeof AuthenticatedOversiktRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profil': {
+      id: '/_authenticated/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof AuthenticatedProfilRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/registrera': {
+      id: '/_authenticated/registrera'
+      path: '/registrera'
+      fullPath: '/registrera'
+      preLoaderRoute: typeof AuthenticatedRegistreraRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/upphittat': {
+      id: '/_authenticated/upphittat'
+      path: '/upphittat'
+      fullPath: '/upphittat'
+      preLoaderRoute: typeof AuthenticatedUpphittatRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mina-djur/': {
+      id: '/_authenticated/mina-djur/'
+      path: '/mina-djur'
+      fullPath: '/mina-djur/'
+      preLoaderRoute: typeof AuthenticatedMinaDjurIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mina-djur/$id': {
+      id: '/_authenticated/mina-djur/$id'
+      path: '/mina-djur/$id'
+      fullPath: '/mina-djur/$id'
+      preLoaderRoute: typeof AuthenticatedMinaDjurIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedInstallningarRoute: typeof AuthenticatedInstallningarRoute
+  AuthenticatedNotiserRoute: typeof AuthenticatedNotiserRoute
+  AuthenticatedOversiktRoute: typeof AuthenticatedOversiktRoute
+  AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
+  AuthenticatedRegistreraRoute: typeof AuthenticatedRegistreraRoute
+  AuthenticatedUpphittatRoute: typeof AuthenticatedUpphittatRoute
+  AuthenticatedMinaDjurIdRoute: typeof AuthenticatedMinaDjurIdRoute
+  AuthenticatedMinaDjurIndexRoute: typeof AuthenticatedMinaDjurIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedInstallningarRoute: AuthenticatedInstallningarRoute,
+  AuthenticatedNotiserRoute: AuthenticatedNotiserRoute,
+  AuthenticatedOversiktRoute: AuthenticatedOversiktRoute,
+  AuthenticatedProfilRoute: AuthenticatedProfilRoute,
+  AuthenticatedRegistreraRoute: AuthenticatedRegistreraRoute,
+  AuthenticatedUpphittatRoute: AuthenticatedUpphittatRoute,
+  AuthenticatedMinaDjurIdRoute: AuthenticatedMinaDjurIdRoute,
+  AuthenticatedMinaDjurIndexRoute: AuthenticatedMinaDjurIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  BorttappadeRoute: BorttappadeRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
