@@ -20,6 +20,7 @@ import { Route as AuthenticatedNotiserRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedOversiktRouteImport } from './routes/_authenticated/oversikt'
 import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
 import { Route as AuthenticatedRegistreraRouteImport } from './routes/_authenticated/registrera'
+import { Route as DjurIdRouteImport } from './routes/djur.$id'
 import { Route as AuthenticatedMinaDjurIndexRouteImport } from './routes/_authenticated/mina-djur.index'
 import { Route as AuthenticatedMinaDjurIdRouteImport } from './routes/_authenticated/mina-djur.$id'
 
@@ -78,6 +79,11 @@ const AuthenticatedRegistreraRoute = AuthenticatedRegistreraRouteImport.update({
   path: '/registrera',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const DjurIdRoute = DjurIdRouteImport.update({
+  id: '/djur/$id',
+  path: '/djur/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedMinaDjurIndexRoute =
   AuthenticatedMinaDjurIndexRouteImport.update({
     id: '/mina-djur/',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/oversikt': typeof AuthenticatedOversiktRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/registrera': typeof AuthenticatedRegistreraRoute
+  '/djur/$id': typeof DjurIdRoute
   '/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
   '/mina-djur/': typeof AuthenticatedMinaDjurIndexRoute
 }
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/oversikt': typeof AuthenticatedOversiktRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/registrera': typeof AuthenticatedRegistreraRoute
+  '/djur/$id': typeof DjurIdRoute
   '/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
   '/mina-djur': typeof AuthenticatedMinaDjurIndexRoute
 }
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/_authenticated/oversikt': typeof AuthenticatedOversiktRoute
   '/_authenticated/profil': typeof AuthenticatedProfilRoute
   '/_authenticated/registrera': typeof AuthenticatedRegistreraRoute
+  '/djur/$id': typeof DjurIdRoute
   '/_authenticated/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
   '/_authenticated/mina-djur/': typeof AuthenticatedMinaDjurIndexRoute
 }
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/oversikt'
     | '/profil'
     | '/registrera'
+    | '/djur/$id'
     | '/mina-djur/$id'
     | '/mina-djur/'
   fileRoutesByTo: FileRoutesByTo
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/oversikt'
     | '/profil'
     | '/registrera'
+    | '/djur/$id'
     | '/mina-djur/$id'
     | '/mina-djur'
   id:
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/_authenticated/oversikt'
     | '/_authenticated/profil'
     | '/_authenticated/registrera'
+    | '/djur/$id'
     | '/_authenticated/mina-djur/$id'
     | '/_authenticated/mina-djur/'
   fileRoutesById: FileRoutesById
@@ -187,6 +199,7 @@ export interface RootRouteChildren {
   BorttappadeRoute: typeof BorttappadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   UpphittatRoute: typeof UpphittatRoute
+  DjurIdRoute: typeof DjurIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -268,6 +281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRegistreraRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/djur/$id': {
+      id: '/djur/$id'
+      path: '/djur/$id'
+      fullPath: '/djur/$id'
+      preLoaderRoute: typeof DjurIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/mina-djur/': {
       id: '/_authenticated/mina-djur/'
       path: '/mina-djur'
@@ -315,6 +335,7 @@ const rootRouteChildren: RootRouteChildren = {
   BorttappadeRoute: BorttappadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   UpphittatRoute: UpphittatRoute,
+  DjurIdRoute: DjurIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

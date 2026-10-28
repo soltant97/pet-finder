@@ -7,8 +7,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field } from "@/components/Field";
+import { contactReturn } from "@/lib/contact";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (search: Record<string, unknown>) => ({ redirect: contactReturn(search.redirect), mode: search.mode === "signup" ? "signup" as const : "login" as const }),
   head: () => ({
     meta: [
       { title: "Logga in – DjurHittaren" },
@@ -35,7 +37,12 @@ function translate(msg: string) {
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState<Mode>("login");
+  const search = Route.useSearch();
+  const [mode, setMode] = useState<Mode>(search.mode);
+  function finishLogin() {
+    if (search.redirect) navigate({ to: "/djur/$id", params: { id: search.redirect.slice(6) }, replace: true });
+    else navigate({ to: "/oversikt", replace: true });
+  }
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
@@ -44,9 +51,9 @@ function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/oversikt", replace: true });
+      if (data.user) finishLogin();
     });
-  }, [navigate]);
+  }, [navigate, search.redirect]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -59,23 +66,24 @@ function AuthPage() {
     }
     setErrors(errs);
     if (Object.keys(errs).length) return;
+    if (!em.success) return;
     setBusy(true);
     try {
       if (mode === "login") {
-        const { error } = await supabase.auth.signInWithPassword({ email: em.data!, password });
+        const { error } = await supabase.auth.signInWithPassword({ email: em.data, password });
         if (error) throw error;
-        navigate({ to: "/oversikt", replace: true });
+        finishLogin();
       } else if (mode === "signup") {
         const { data, error } = await supabase.auth.signUp({
-          email: em.data!,
+          email: em.data,
           password,
-          options: { emailRedirectTo: window.location.origin + "/oversikt" },
+          options: { emailRedirectTo: window.location.origin + "/auth" + (search.redirect ? `?redirect=${encodeURIComponent(search.redirect)}` : "") },
         });
         if (error) throw error;
-        if (data.session) navigate({ to: "/oversikt", replace: true });
+        if (data.session) finishLogin();
         else setSent("signup");
       } else {
-        const { error } = await supabase.auth.resetPasswordForEmail(em.data!, {
+        const { error } = await supabase.auth.resetPasswordForEmail(em.data, {
           redirectTo: `${window.location.origin}/reset-password`,
         });
         if (error) throw error;

@@ -315,9 +315,7 @@ function PetDialog({ pet, onClose }: { pet: Match | null; onClose: () => void })
               <dt className="font-semibold">Senast sedd</dt><dd>{pet.last_location}, {formatDate(pet.last_seen_date)}</dd>
             </dl>
             {pet.circumstances && <p className="text-sm text-muted-foreground">{pet.circumstances}</p>}
-            <p className="rounded-xl bg-accent p-3 text-sm">
-              Tror du att det är samma djur? Att kontakta ägaren direkt i appen kommer i en senare version. Kontakta under tiden polisen på 114 14 eller en veterinär som kan läsa av chip.
-            </p>
+            <Button asChild><Link to="/djur/$id" params={{ id: pet.id }}>Kontakta ägaren</Link></Button>
           </>
         )}
       </DialogContent>
