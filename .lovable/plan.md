@@ -1,7 +1,7 @@
 # DjurHittaren: begränsad pilot för visuell bildsökning
 
 ## Mål och avgränsning
-En inloggad upphittare jämför en bild med referensbilder för djur som just nu är **Borttappade**. Befintliga filter, djurprofiler, privat fotolagring och kontaktförfrågningar återanvänds. Den öppna, vanliga sökningen fortsätter fungera oförändrat.
+Inloggade pilottestare jämför en bild med **Borttappade** djur. Befintliga filter, privat lagring, profiler och kontakt återanvänds. Vanlig gästsökning ändras inte.
 
 Resultaten är **möjliga liknande djur**, aldrig bekräftad identitet eller en kalibrerad sannolikhet. Ingen ny textanalysmodell, extern vektordatabas eller betald bildtjänst ingår.
 
@@ -79,5 +79,5 @@ Resultaten är **möjliga liknande djur**, aldrig bekräftad identitet eller en 
 - Embedding-anrop, referensindexering, serverarbete, databas och bildtrafik använder Cloud/AI-credits. Inga köp eller planuppgraderingar sker automatiskt. Referenser beräknas en gång per ändrad bild, inte per sökning.
 - Tidigare kostnadsexempel byggde på antaget tokenantal. **Faktisk bildkostnad och debiteringsenhet måste bekräftas i fas 1** innan ett belopp utlovas. Föreslagen pilotbudget är högst 10 AI-credits; om kostnaden inte kan mätas och begränsas säkert stoppas arbetet för nytt beslut.
 - Bekräfta rättslig grund, opt-in, biträdesvillkor, retention och region innan riktiga foton skickas. ”Zero retention” omfattar inte automatiskt app-/plattformloggar; full bildkontextloggning ska vara av.
-- Oklara punkter: faktisk runtime-kompatibilitet, serverns bildcodec och belastningsgränser, modellens faktiska precision, uppmätta bildtoken/kostnader och regionala villkor. Varje punkt har en kontrollpunkt ovan; ingen är beskriven som redan verifierad.
+- Osäkerheter: runtime, bildcodec, belastningsgränser, precision, bildtoken/kostnader och regionala villkor. Kontrollpunkterna ovan måste verifiera dessa.
 - Extern tjänst eller annan modell kräver nytt godkännande med kostnads-/integritetsbesked.
