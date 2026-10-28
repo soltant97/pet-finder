@@ -8,9 +8,9 @@ Resultaten är **möjliga liknande djur**, aldrig bekräftad identitet eller en 
 **Nu görs endast planering.** Godkännande startar fas 1; efterföljande faser får genomföras endast om dess kontrollpunkter klaras och ingen ny extern tjänst krävs.
 
 ## Fas 1 – verifiera tekniken innan appen ändras
-1. Kontrollera aktuell tillgänglighet för exakt `google/gemini-embedding-2`, bildindata, embeddings-endpoint och arbetsytans sekretessvillkor. Katalogstödet har tidigare verifierats; ett faktiskt bildanrop har inte testats.
+1. Kontrollera exakt `google/gemini-embedding-2`, bildindata, embeddings-endpoint och sekretessvillkor. Katalogstöd är verifierat; faktiskt bildanrop är inte testat.
 2. Gör efter godkännande ett litet, debiterbart test med en uttryckligen godkänd, icke-känslig testbild. Använd `/v1/embeddings` och dokumenterat multimodalt `input[].content[]` med `image_url`, faktisk MIME-typ och `encoding_format: float`. Verifiera säker bildöverföring med inline-bilddata; om detta inte stöds, prövas endast dokumenterad kortlivad HTTPS-leverans av testbilden. Privata användarfoton används inte i detta test.
-3. Inspektera den faktiska responsen: `data[].index`, numeriska ändliga värden i `data[].embedding`, dimensioner, användningsmätning och kostnadslogg. Behåll modellens fulla standarddimension, förväntat 3072; ingen dimensionsminskning eller modellsubstitution.
+3. Kontrollera responsens `data[].index`, ändliga numeriska `data[].embedding`, dimensioner, användning och kostnad. Behåll full standarddimension, förväntat 3072; inget modellbyte.
 4. Prova bildavkodning och återkodning i samma servermiljö som den publicerade appen: JPEG, PNG och WebP, orientering, EXIF/GPS, trasiga bilder och stora pixelmått. Välj en serverkompatibel JS/WASM-lösning först efter detta test. Native `sharp`/`canvas` kan inte förutsättas fungera.
 5. Dokumentera uppmätt kostnad och svarstid. Om modellen, formatet, sekretessvillkoren eller bildbehandlingen inte fungerar: **stoppa piloten**, behåll vanlig sökning och återkom med hindret. Ingen annan modell eller extern tjänst införs utan nytt godkännande.
 
@@ -43,30 +43,26 @@ Resultaten är **möjliga liknande djur**, aldrig bekräftad identitet eller en 
 
 ## Fas 4 – gränssnitt i befintlig svensk design
 - Lägg till ett tydligt val i ”Upphittat djur”: vanlig sökning respektive ”Bildsökning – pilot”. AI-valet är endast aktivt för tillåtna inloggade konton. Vanlig sökning förblir tillgänglig för alla.
-- Återanvänd kameraval, bildförhandsvisning, plats-/datumfält och resultatkort. AI-piloten väljer en sökbild utan att ändra den vanliga flersbildsrapporteringen.
-- Visa laddning, avbryt, kvot nådd, tillfälligt AI-fel, ej indexerade referenser och inga kandidater. Tillåt återgång till vanlig sökning utan fabricerade AI-resultat.
+- Återanvänd kamera, förhandsvisning, filter och resultatkort. AI väljer en bild; vanlig flersbildsrapportering ändras inte.
+- Visa laddning, avbryt, kvot, fel, ej indexerade referenser och tomma resultat. Behåll återgång till vanlig sökning.
 - Upplys om att bilden behandlas tillfälligt och jämförelsen inte bekräftar djurets identitet.
-- Resultat öppnar befintlig offentlig djurprofil och återanvänder ”Kontakta ägaren”, kontaktförfrågan och accepterat privat samtal. Ingen automatisk kontakt skapas.
+- Återanvänd offentlig profil, ”Kontakta ägaren”, förfrågan och privat samtal. Ingen automatisk kontakt.
 
 ## Tekniska förändringar
 ### Databas – endast tillägg
-| Del | Innehåll och åtkomst |
-|---|---|
-| `pet_photo_embeddings` | Referens till befintlig `pet_photos`, modell-ID, full vektor, innehållshash, version, status och tidsstämplar. Råvektorer är server-only; foto-borttagning raderar referensen. |
-| `ai_pilot_access` | Tillåtna konton och ägarens opt-in för pilotindexering. Inga självskrivbara åtkomstökningar. |
-| `ai_usage_windows` | Atomiska konto-/arbetsytekvoter och tidsbegränsade jobbreservationer; inga bilder, GPS eller meddelanden. |
-| `ai_pilot_settings` | Pilot av/på, budgetbegränsning och beständigt paus-/felstatus. Endast privilegierade serveråtgärder får ändra. |
-
-- Aktivera tillgängligt `pgvector`. Lagra full standarddimension; börja med exakt jämförelse på den lilla pilotmängden. Ett eventuellt index måste stödja 3072 dimensioner, inte ett felaktigt vanligt HNSW-index med lägre dimensionsgräns.
-- Samtliga nya tabeller får explicita GRANTs och RLS; ingen anonym åtkomst till vektorer, kvoter eller pilotinställningar.
-- Server-only SQL-funktioner hanterar kvotreservation och matchning. Direkt anrop från klienten får inte kringgå bildvalidering, betalgränser eller indexering. Sökfrågan återanvänder befintliga relationer och safe-field-projektioner; `get_lost_pets()` och `search_lost_pets()` lämnas fungerande.
+- `pet_photo_embeddings`: FK till `pet_photos`, modell-ID, full vektor, innehållshash, behandlingsversion, status och tidsstämplar. Foto-borttagning raderar referensen. Råvektorer är server-only.
+- `ai_pilot_access`: tillåtna konton och ägarens opt-in per djur. Ingen självskrivbar utökning av åtkomst.
+- `ai_usage_windows`: atomiska konto-/arbetsytekvoter och tidsbegränsade jobbreservationer; inga bilder eller GPS.
+- `ai_pilot_settings`: av/på, budget och beständigt pausstatus; privilegierade serveråtgärder äger ändringar.
+- Aktivera tillgängligt `pgvector`; lagra full standarddimension och börja med exakt jämförelse på pilotmängden. Ett framtida index måste stödja 3072 dimensioner.
+- Explicita GRANTs och RLS på alla nya tabeller. Inga klient-/anonrättigheter till råvektorer eller kvotändringar. Server-only SQL-funktioner reserverar kvot och söker med borttappad-status och befintliga relationer. Direkta klientanrop får inte kringgå betal-/åtkomstkontroller.
+- `get_lost_pets()` och `search_lost_pets()` samt befintlig CRUD behålls.
 
 ### Backend och lagring
-- `src/lib/visual-search.functions.ts`: autentiserade serverfunktioner för pilotstatus, ägarens indexering och bildsökning.
-- `*.server.ts`-hjälpare: validering/återkodning, exakt embedding-protokoll, kvoter och säker bildleverans. Befintlig bearer-/CSRF-hantering återanvänds.
-- Befintlig privata `pet-photos` behålls. Inga bredare publik- eller gästuppladdningsregler. AI-arbetet får endast läsa verifierade foton och får inte utfärda länkar till registrerade/återfunna privata djur.
-- Uppdatera referensindexets livscykel vid nya/ändrade/borttagna foton. Befintlig CRUD fortsätter även om AI misslyckas; felet markeras för kontrollerat nytt försök.
-- Pilotens rensning skyddar AI-inmatningen men löser **inte automatiskt EXIF i redan publicerbara originalbilder**. Full lansering kräver en separat, godkänd sanering av den ordinarie foto-uppladdningen och befintliga bilder samt verifierad radering av övergivna vanliga uppladdningar.
+- `src/lib/visual-search.functions.ts`: autentiserade serverfunktioner för pilotstatus, ägarens indexering och bildsökning. `*.server.ts`: bildrensning, embedding-protokoll, kvoter och säker bildleverans. Återanvänd befintlig bearer-/CSRF-hantering.
+- Behåll privata `pet-photos`; inga bredare publik- eller gästuppladdningsregler. Endast verifierade referenser får läsas. Kandidatbilder visas genom statuskontrollerad bildleverans utan utlämnade privata sökvägar.
+- Indexering startas vid godkänd pilotanslutning eller nya/ändrade bilder. Fel stoppar inte djurregistrering; index markeras för kontrollerat nytt försök. Borttagna bilder raderar embeddings.
+- Pilotens rensning skyddar AI-inmatningen, **inte EXIF i befintliga originalbilder**. Full lansering kräver separat godkänd sanering av ordinarie uppladdning/befintliga bilder och radering av övergivna vanliga uppladdningar.
 
 ## Fas 5 – verkliga tester och beslut om pilotöppning
 ### Träffsäkerhet
@@ -85,6 +81,6 @@ Resultaten är **möjliga liknande djur**, aldrig bekräftad identitet eller en 
 ## Kostnader, sekretess och kvarstående osäkerheter
 - Embedding-anrop, referensindexering, serverarbete, databas och bildtrafik använder Cloud/AI-credits. Inga köp eller planuppgraderingar sker automatiskt. Referenser beräknas en gång per ändrad bild, inte per sökning.
 - Tidigare kostnadsexempel byggde på antaget tokenantal. **Faktisk bildkostnad och debiteringsenhet måste bekräftas i fas 1** innan ett belopp utlovas. Föreslagen pilotbudget är högst 10 AI-credits; om kostnaden inte kan mätas och begränsas säkert stoppas arbetet för nytt beslut.
-- Bekräfta laglig grund, opt-in-information, biträdesvillkor, AI-loggning, retention och regional behandling innan riktiga foton skickas. Leverantörens ”zero retention” betyder inte att alla app-/plattformloggar saknar lagring. Stäng av full bildkontextloggning om inställningen och villkoren tillåter det.
+- Bekräfta rättslig grund, opt-in, biträdesvillkor, retention och region innan riktiga foton skickas. ”Zero retention” omfattar inte automatiskt app-/plattformloggar; full bildkontextloggning ska vara av.
 - Oklara punkter: faktisk runtime-kompatibilitet, serverns bildcodec och belastningsgränser, modellens faktiska precision, uppmätta bildtoken/kostnader och regionala villkor. Varje punkt har en kontrollpunkt ovan; ingen är beskriven som redan verifierad.
-- Om en extern bildtjänst, ny betald integration eller annan modell blir nödvändig återkommer vi med tjänst, kostnad och integritetskonsekvens **innan** något införs.
+- Extern tjänst eller annan modell kräver nytt godkännande med kostnads-/integritetsbesked.
