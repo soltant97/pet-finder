@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from "react";
-import { ImagePlus, X } from "lucide-react";
+import { Camera, ImagePlus, X } from "lucide-react";
 import { toast } from "sonner";
 import { MAX_PHOTOS, validateFile } from "@/lib/pets";
 
@@ -7,12 +7,15 @@ export function PhotoPicker({
   files,
   onChange,
   existingCount = 0,
+  camera = false,
 }: {
   files: File[];
   onChange: (f: File[]) => void;
   existingCount?: number;
+  camera?: boolean;
 }) {
   const input = useRef<HTMLInputElement>(null);
+  const cam = useRef<HTMLInputElement>(null);
   const previews = useMemo(() => files.map((f) => URL.createObjectURL(f)), [files]);
   useEffect(() => () => previews.forEach((u) => URL.revokeObjectURL(u)), [previews]);
   const remaining = MAX_PHOTOS - existingCount - files.length;
@@ -46,6 +49,16 @@ export function PhotoPicker({
             </button>
           </div>
         ))}
+        {remaining > 0 && camera && (
+          <button
+            type="button"
+            onClick={() => cam.current?.click()}
+            className="flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-input text-sm text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+          >
+            <Camera className="h-6 w-6" />
+            Ta foto
+          </button>
+        )}
         {remaining > 0 && (
           <button
             type="button"
@@ -57,6 +70,9 @@ export function PhotoPicker({
           </button>
         )}
       </div>
+      {camera && (
+        <input ref={cam} type="file" accept="image/jpeg,image/png,image/webp" capture="environment" hidden onChange={(e) => add(e.target.files)} />
+      )}
       <p className="mt-2 text-xs text-muted-foreground">JPG, PNG eller WebP, högst 5 MB per bild. Max {MAX_PHOTOS} bilder.</p>
       <input
         ref={input}

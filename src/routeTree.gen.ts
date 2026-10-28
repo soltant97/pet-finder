@@ -19,7 +19,6 @@ import { Route as AuthenticatedNotiserRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedOversiktRouteImport } from './routes/_authenticated/oversikt'
 import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
 import { Route as AuthenticatedRegistreraRouteImport } from './routes/_authenticated/registrera'
-import { Route as AuthenticatedUpphittatRouteImport } from './routes/_authenticated/upphittat'
 import { Route as AuthenticatedMinaDjurIndexRouteImport } from './routes/_authenticated/mina-djur.index'
 import { Route as AuthenticatedMinaDjurIdRouteImport } from './routes/_authenticated/mina-djur.$id'
 
@@ -73,11 +72,6 @@ const AuthenticatedRegistreraRoute = AuthenticatedRegistreraRouteImport.update({
   path: '/registrera',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedUpphittatRoute = AuthenticatedUpphittatRouteImport.update({
-  id: '/upphittat',
-  path: '/upphittat',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedMinaDjurIndexRoute =
   AuthenticatedMinaDjurIndexRouteImport.update({
     id: '/mina-djur/',
@@ -100,7 +94,6 @@ export interface FileRoutesByFullPath {
   '/oversikt': typeof AuthenticatedOversiktRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/registrera': typeof AuthenticatedRegistreraRoute
-  '/upphittat': typeof AuthenticatedUpphittatRoute
   '/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
   '/mina-djur/': typeof AuthenticatedMinaDjurIndexRoute
 }
@@ -114,7 +107,6 @@ export interface FileRoutesByTo {
   '/oversikt': typeof AuthenticatedOversiktRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/registrera': typeof AuthenticatedRegistreraRoute
-  '/upphittat': typeof AuthenticatedUpphittatRoute
   '/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
   '/mina-djur': typeof AuthenticatedMinaDjurIndexRoute
 }
@@ -130,7 +122,6 @@ export interface FileRoutesById {
   '/_authenticated/oversikt': typeof AuthenticatedOversiktRoute
   '/_authenticated/profil': typeof AuthenticatedProfilRoute
   '/_authenticated/registrera': typeof AuthenticatedRegistreraRoute
-  '/_authenticated/upphittat': typeof AuthenticatedUpphittatRoute
   '/_authenticated/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
   '/_authenticated/mina-djur/': typeof AuthenticatedMinaDjurIndexRoute
 }
@@ -146,7 +137,6 @@ export interface FileRouteTypes {
     | '/oversikt'
     | '/profil'
     | '/registrera'
-    | '/upphittat'
     | '/mina-djur/$id'
     | '/mina-djur/'
   fileRoutesByTo: FileRoutesByTo
@@ -160,7 +150,6 @@ export interface FileRouteTypes {
     | '/oversikt'
     | '/profil'
     | '/registrera'
-    | '/upphittat'
     | '/mina-djur/$id'
     | '/mina-djur'
   id:
@@ -175,7 +164,6 @@ export interface FileRouteTypes {
     | '/_authenticated/oversikt'
     | '/_authenticated/profil'
     | '/_authenticated/registrera'
-    | '/_authenticated/upphittat'
     | '/_authenticated/mina-djur/$id'
     | '/_authenticated/mina-djur/'
   fileRoutesById: FileRoutesById
@@ -260,13 +248,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRegistreraRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/upphittat': {
-      id: '/_authenticated/upphittat'
-      path: '/upphittat'
-      fullPath: '/upphittat'
-      preLoaderRoute: typeof AuthenticatedUpphittatRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/mina-djur/': {
       id: '/_authenticated/mina-djur/'
       path: '/mina-djur'
@@ -290,7 +271,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOversiktRoute: typeof AuthenticatedOversiktRoute
   AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
   AuthenticatedRegistreraRoute: typeof AuthenticatedRegistreraRoute
-  AuthenticatedUpphittatRoute: typeof AuthenticatedUpphittatRoute
   AuthenticatedMinaDjurIdRoute: typeof AuthenticatedMinaDjurIdRoute
   AuthenticatedMinaDjurIndexRoute: typeof AuthenticatedMinaDjurIndexRoute
 }
@@ -301,7 +281,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOversiktRoute: AuthenticatedOversiktRoute,
   AuthenticatedProfilRoute: AuthenticatedProfilRoute,
   AuthenticatedRegistreraRoute: AuthenticatedRegistreraRoute,
-  AuthenticatedUpphittatRoute: AuthenticatedUpphittatRoute,
   AuthenticatedMinaDjurIdRoute: AuthenticatedMinaDjurIdRoute,
   AuthenticatedMinaDjurIndexRoute: AuthenticatedMinaDjurIndexRoute,
 }
