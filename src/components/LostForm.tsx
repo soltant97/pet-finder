@@ -23,15 +23,15 @@ export function LostForm({
     last_seen_date: initial?.last_seen_date ?? todayISO(),
     circumstances: initial?.circumstances ?? "",
   });
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof LostInput, string>>>({});
   const [busy, setBusy] = useState(false);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const r = lostSchema.safeParse(v);
     if (!r.success) {
-      const errs: Record<string, string> = {};
-      r.error.issues.forEach((i) => (errs[String(i.path[0])] = i.message));
+      const errs: Partial<Record<keyof LostInput, string>> = {};
+      r.error.issues.forEach((i) => (errs[i.path[0] as keyof LostInput] = i.message));
       setErrors(errs);
       return;
     }

@@ -38,7 +38,7 @@ function AuthPage() {
   const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState<null | "signup" | "forgot">(null);
 
@@ -50,7 +50,7 @@ function AuthPage() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    const errs: Record<string, string> = {};
+    const errs: { email?: string; password?: string } = {};
     const em = emailS.safeParse(email);
     if (!em.success) errs.email = em.error.issues[0].message;
     if (mode !== "forgot") {

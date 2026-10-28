@@ -16,13 +16,13 @@ export const selectClass =
 
 export function usePetForm(initial: PetInput) {
   const [values, setValues] = useState<PetInput>(initial);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof PetInput, string>>>({});
   const set = (k: keyof PetInput) => (e: { target: { value: string } }) => setValues((v) => ({ ...v, [k]: e.target.value }));
   function validate(): PetValues | null {
     const r = petSchema.safeParse(values);
     if (!r.success) {
-      const errs: Record<string, string> = {};
-      r.error.issues.forEach((i) => (errs[String(i.path[0])] = i.message));
+      const errs: Partial<Record<keyof PetInput, string>> = {};
+      r.error.issues.forEach((i) => (errs[i.path[0] as keyof PetInput] = i.message));
       setErrors(errs);
       return null;
     }
