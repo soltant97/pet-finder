@@ -54,7 +54,7 @@ export function tokens(s: string | null | undefined): string[] {
 }
 
 /** Structured text similarity (no AI): which public fields share words with the finder's description. */
-export function scoreCandidate(c: Pick<LostCandidate, "color" | "breed" | "marks" | "circumstances">, description: string) {
+export function scoreCandidate(c: { color: string | null; breed: string | null; marks: string | null; circumstances: string | null }, description: string) {
   const words = new Set(tokens(description));
   const hit = (field: string | null) => tokens(field).filter((t) => words.has(t) || [...words].some((w) => w.length >= 4 && (t.startsWith(w) || w.startsWith(t))));
   const color = hit(c.color);
