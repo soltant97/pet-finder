@@ -10,13 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BorttappadeRouteImport } from './routes/borttappade'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedOversiktRouteImport } from './routes/_authenticated/oversikt'
+import { Route as AuthenticatedRegistreraRouteImport } from './routes/_authenticated/registrera'
+import { Route as AuthenticatedMinaDjurIndexRouteImport } from './routes/_authenticated/mina-djur.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -34,36 +42,86 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedOversiktRoute = AuthenticatedOversiktRouteImport.update({
+  id: '/oversikt',
+  path: '/oversikt',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedRegistreraRoute = AuthenticatedRegistreraRouteImport.update({
+  id: '/registrera',
+  path: '/registrera',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMinaDjurIndexRoute =
+  AuthenticatedMinaDjurIndexRouteImport.update({
+    id: '/mina-djur/',
+    path: '/mina-djur/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/oversikt': typeof AuthenticatedOversiktRoute
+  '/registrera': typeof AuthenticatedRegistreraRoute
+  '/mina-djur/': typeof AuthenticatedMinaDjurIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/oversikt': typeof AuthenticatedOversiktRoute
+  '/registrera': typeof AuthenticatedRegistreraRoute
+  '/mina-djur': typeof AuthenticatedMinaDjurIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/oversikt': typeof AuthenticatedOversiktRoute
+  '/_authenticated/registrera': typeof AuthenticatedRegistreraRoute
+  '/_authenticated/mina-djur/': typeof AuthenticatedMinaDjurIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/borttappade' | '/reset-password'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/borttappade'
+    | '/reset-password'
+    | '/oversikt'
+    | '/registrera'
+    | '/mina-djur/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/borttappade' | '/reset-password'
-  id: '__root__' | '/' | '/auth' | '/borttappade' | '/reset-password'
+  to:
+    | '/'
+    | '/auth'
+    | '/borttappade'
+    | '/reset-password'
+    | '/oversikt'
+    | '/registrera'
+    | '/mina-djur'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/borttappade'
+    | '/reset-password'
+    | '/_authenticated/oversikt'
+    | '/_authenticated/registrera'
+    | '/_authenticated/mina-djur/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   BorttappadeRoute: typeof BorttappadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -76,6 +134,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -99,11 +164,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/oversikt': {
+      id: '/_authenticated/oversikt'
+      path: '/oversikt'
+      fullPath: '/oversikt'
+      preLoaderRoute: typeof AuthenticatedOversiktRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/registrera': {
+      id: '/_authenticated/registrera'
+      path: '/registrera'
+      fullPath: '/registrera'
+      preLoaderRoute: typeof AuthenticatedRegistreraRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mina-djur/': {
+      id: '/_authenticated/mina-djur/'
+      path: '/mina-djur'
+      fullPath: '/mina-djur/'
+      preLoaderRoute: typeof AuthenticatedMinaDjurIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedOversiktRoute: typeof AuthenticatedOversiktRoute
+  AuthenticatedRegistreraRoute: typeof AuthenticatedRegistreraRoute
+  AuthenticatedMinaDjurIndexRoute: typeof AuthenticatedMinaDjurIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedOversiktRoute: AuthenticatedOversiktRoute,
+  AuthenticatedRegistreraRoute: AuthenticatedRegistreraRoute,
+  AuthenticatedMinaDjurIndexRoute: AuthenticatedMinaDjurIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   BorttappadeRoute: BorttappadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
