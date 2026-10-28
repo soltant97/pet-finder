@@ -5,14 +5,14 @@ En inloggad upphittare jämför en bild med referensbilder för djur som just nu
 
 Resultaten är **möjliga liknande djur**, aldrig bekräftad identitet eller en kalibrerad sannolikhet. Ingen ny textanalysmodell, extern vektordatabas eller betald bildtjänst ingår.
 
-**Nu görs endast planering.** Godkännande startar fas 1; efterföljande faser får genomföras endast om dess kontrollpunkter klaras och ingen ny extern tjänst krävs.
+**Endast planering nu.** Godkännande startar fas 1. Fortsättning kräver klarade kontrollpunkter; nya externa tjänster kräver nytt godkännande.
 
 ## Fas 1 – verifiera tekniken innan appen ändras
 1. Kontrollera exakt `google/gemini-embedding-2`, bildindata, embeddings-endpoint och sekretessvillkor. Katalogstöd är verifierat; faktiskt bildanrop är inte testat.
 2. Gör efter godkännande ett litet, debiterbart test med en uttryckligen godkänd, icke-känslig testbild. Använd `/v1/embeddings` och dokumenterat multimodalt `input[].content[]` med `image_url`, faktisk MIME-typ och `encoding_format: float`. Verifiera säker bildöverföring med inline-bilddata; om detta inte stöds, prövas endast dokumenterad kortlivad HTTPS-leverans av testbilden. Privata användarfoton används inte i detta test.
 3. Kontrollera responsens `data[].index`, ändliga numeriska `data[].embedding`, dimensioner, användning och kostnad. Behåll full standarddimension, förväntat 3072; inget modellbyte.
 4. Prova bildavkodning och återkodning i samma servermiljö som den publicerade appen: JPEG, PNG och WebP, orientering, EXIF/GPS, trasiga bilder och stora pixelmått. Välj en serverkompatibel JS/WASM-lösning först efter detta test. Native `sharp`/`canvas` kan inte förutsättas fungera.
-5. Dokumentera uppmätt kostnad och svarstid. Om modellen, formatet, sekretessvillkoren eller bildbehandlingen inte fungerar: **stoppa piloten**, behåll vanlig sökning och återkom med hindret. Ingen annan modell eller extern tjänst införs utan nytt godkännande.
+5. Mät kostnad/svarstid. Om modell, format, sekretess eller bildbehandling inte fungerar: **stoppa**, behåll vanlig sökning och redovisa hindret. Inget modellbyte eller extern tjänst utan nytt godkännande.
 
 **Kontrollpunkt:** fungerande bildembedding och säker bildrensning måste vara verifierade innan databasschema, lagringsregler eller gränssnitt ändras.
 
@@ -30,14 +30,13 @@ Resultaten är **möjliga liknande djur**, aldrig bekräftad identitet eller en 
 - Backend saknar standardfunktion för rate limiting. Godkännande av planen bekräftar en **egen atomisk databasbaserad begränsning**: beständig och serverkontrollerad, men inte ett komplett överbelastningsskydd eller skydd mot många nyregistrerade konton.
 - Kredit-/policyblockering pausar alla AI-ingångar beständigt. Endast 429/5xx får begränsade, fördröjda återförsök. Terminala fel stoppar arbetet utan modellbyte.
 
-## Fas 3 – visuell sökning med befintliga filter
-1. Servern validerar djurslag, ungefärligt område/ort, datum och övriga angivna djuruppgifter.
-2. Databasfrågan begränsar först till `pets.status = 'borttappad'`, giltig borttappad-anmälan, pilotens referensbilder och aktuella färdiga embeddings. Samma djurslag/plats/datum-semantik som nuvarande sökning används; saknade uppgifter antas inte vara säkra fakta.
-3. Jämför normaliserade bildvektorer med cosinuslikhet. För ett djur med flera bilder används **högsta likheten bland djurets referensbilder** som första pilotregel. En rad per djur returneras, högst tio kandidater. Utvärdera även medelvärdet av de två bästa bilderna i testet; ändra inte regeln utan redovisad jämförelse.
-4. Plats, djurslag och datum är filter; bildlikhet är huvudsaklig rangordning. Befintlig överlappning i färg/kännetecken får användas som utslagsregel, inte som en godtyckligt viktad ”AI-säkerhet”.
-5. Sökningen kan utökas område → ort/kommun → hela Sverige. Inga kilometer visas från textplatser.
-6. Kontrollera borttappad-status även på servern precis före svaret. Återfunna djur försvinner från nya resultat även om embeddings finns kvar. Befintliga privata samtal påverkas inte.
-7. Returnera endast tillåtna djurfält, foto-ID/visningsreferens och rangordning. Ingen embedding, privat sökväg, ägaridentitet, chipnummer eller upphittarbild lämnar servern. Kandidatbilder levereras genom kontrollerad bildvisning med kontroll av aktuell status; inte genom utlämnade privata sökvägar.
+## Fas 3 – bildlikhet med befintliga filter
+1. Validera djurslag, textplats och datum på servern. Återanvänd nuvarande filtersemantik; saknade uppgifter antas inte vara fakta.
+2. Databasen filtrerar till `pets.status = 'borttappad'`, giltig anmälan och aktuella pilotembeddings **innan** bildjämförelsen. Servern kontrollerar status igen före svaret.
+3. Använd cosinuslikhet mellan normaliserade vektorer. Djurets högsta likhet bland referensbilderna ger dess rangordning; en rad/djur, högst tio kandidater.
+4. Djurslag/plats/datum filtrerar; bildlikhet rangordnar. Befintlig färg-/känneteckenöverlappning får bryta lika resultat, inte skapa en godtycklig ”AI-säkerhet”.
+5. Utöka område → ort/kommun → Sverige. Inga kilometer från textplatser. Återförening stoppar nya träffar men påverkar inte samtal.
+6. Returnera endast tillåtna djurfält, foto-ID/visningsreferens och rang. Inga embeddings, privata sökvägar, ägaruppgifter, chipnummer eller upphittarbilder. Kandidatbilder visas med kontroll av aktuell status utan utlämnade privata sökvägar.
 
 ## Fas 4 – gränssnitt i befintlig svensk design
 - Lägg till ett tydligt val i ”Upphittat djur”: vanlig sökning respektive ”Bildsökning – pilot”. AI-valet är endast aktivt för tillåtna inloggade konton. Vanlig sökning förblir tillgänglig för alla.
