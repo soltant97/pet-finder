@@ -14,6 +14,77 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_requests: {
+        Row: {
+          created_at: string
+          finder_id: string
+          id: string
+          introduction: string
+          owner_id: string
+          pet_id: string
+          pet_name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          finder_id: string
+          id?: string
+          introduction: string
+          owner_id: string
+          pet_id: string
+          pet_name: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          finder_id?: string
+          id?: string
+          introduction?: string
+          owner_id?: string
+          pet_id?: string
+          pet_name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      conversations: {
+        Row: {
+          created_at: string
+          finder_id: string
+          id: string
+          owner_id: string
+          pet_name: string
+          request_id: string
+        }
+        Insert: {
+          created_at?: string
+          finder_id: string
+          id?: string
+          owner_id: string
+          pet_name: string
+          request_id: string
+        }
+        Update: {
+          created_at?: string
+          finder_id?: string
+          id?: string
+          owner_id?: string
+          pet_name?: string
+          request_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: true
+            referencedRelation: "contact_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       found_reports: {
         Row: {
           area: string | null
@@ -84,6 +155,86 @@ export type Database = {
             columns: ["pet_id"]
             isOneToOne: true
             referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          body: string
+          conversation_id: string
+          created_at: string
+          id: string
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          conversation_id: string | null
+          created_at: string
+          id: string
+          kind: string
+          pet_name: string
+          read_at: string | null
+          request_id: string | null
+          user_id: string
+        }
+        Insert: {
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          pet_name: string
+          read_at?: string | null
+          request_id?: string | null
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          pet_name?: string
+          read_at?: string | null
+          request_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "contact_requests"
             referencedColumns: ["id"]
           },
         ]
@@ -195,11 +346,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_blocks: {
+        Row: {
+          blocked_id: string
+          blocker_id: string
+          created_at: string
+        }
+        Insert: {
+          blocked_id: string
+          blocker_id: string
+          created_at?: string
+        }
+        Update: {
+          blocked_id?: string
+          blocker_id?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      create_contact_request: {
+        Args: { _introduction: string; _pet_id: string }
+        Returns: string
+      }
       generate_username: { Args: never; Returns: string }
       get_lost_pets: {
         Args: never
@@ -221,6 +394,18 @@ export type Database = {
       }
       is_lost_pet_photo: { Args: { _path: string }; Returns: boolean }
       is_username_available: { Args: { _username: string }; Returns: boolean }
+      mark_conversation_read: {
+        Args: { _conversation_id: string }
+        Returns: undefined
+      }
+      mark_notification_read: {
+        Args: { _notification_id: string }
+        Returns: undefined
+      }
+      respond_contact_request: {
+        Args: { _request_id: string; _status: string }
+        Returns: string
+      }
       search_lost_pets: {
         Args: {
           _found_date?: string
@@ -242,6 +427,14 @@ export type Database = {
           sex: Database["public"]["Enums"]["pet_sex"]
           species: Database["public"]["Enums"]["pet_species"]
         }[]
+      }
+      send_private_message: {
+        Args: { _body: string; _conversation_id: string }
+        Returns: string
+      }
+      set_contact_block: {
+        Args: { _blocked: boolean; _request_id: string }
+        Returns: undefined
       }
     }
     Enums: {

@@ -23,6 +23,7 @@ export const Route = createFileRoute("/_authenticated/mina-djur/$id")({
       { name: "description", content: "Visa och redigera ditt djurs profil." },
       { property: "og:title", content: "Djurprofil – DjurHittaren" },
       { property: "og:description", content: "Visa och redigera ditt djurs profil." },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
     ],
   }),
   component: PetPage,

@@ -18,3 +18,6 @@
 - All user-facing text is Swedish.
 - Found-pet search goes only through SECURITY DEFINER RPC `search_lost_pets()` (status = 'borttappad' enforced in SQL, same safe columns as get_lost_pets). Locations are free text, so "radius" is text levels (area → town → all of Sweden); never show distances until coordinates exist. Ranking by color/breed/marks is plain word overlap, not AI.
 - Guest finders' photos stay in the browser; signed-in finders' reports go to owner-only `found_reports` with photos under `<userId>/found/<reportId>/…`. Why: the bucket has no safe anonymous upload path.
+- Contact and messaging tables are participant-read-only through RLS; authenticated security-definer RPCs validate all writes and resolve pet ownership in the database. Why: clients cannot forge participants, approvals, notifications, or message senders.
+- Accepted conversations retain a pet-name snapshot without a cascading pet foreign key. Why: reunion and later pet deletion must not erase conversation history.
+- AppHeader owns one unique Realtime subscription per mounted session, with query invalidation and a polling fallback. Why: live messages must not leak subscriptions or lose updates after device sleep.

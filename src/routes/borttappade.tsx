@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { CalendarDays, MapPin, PawPrint, Search } from "lucide-react";
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate, sexLabel, signedUrls, speciesLabel, type Species } from "@/lib/pets";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/borttappade")({
   head: () => ({
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/borttappade")({
       { name: "description", content: "Se katter, hundar och andra husdjur som just nu saknas. Har du sett något av dem?" },
       { property: "og:title", content: "Borttappade djur – DjurHittaren" },
       { property: "og:description", content: "Husdjur som just nu saknas. Har du sett något av dem?" },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
     ],
   }),
   component: LostPage,
@@ -94,6 +96,7 @@ function LostPage() {
                 <p className="flex items-center gap-2"><CalendarDays className="h-4 w-4 text-alert" /> Senast sedd {formatDate(p.last_seen_date)}</p>
               </div>
               {p.circumstances && <p className="line-clamp-3 text-sm text-muted-foreground">{p.circumstances}</p>}
+              <Button asChild variant="outline" className="w-full"><Link to="/djur/$id" params={{ id: p.id }}>Visa djur och kontakta ägaren</Link></Button>
             </div>
           </article>
         ))}

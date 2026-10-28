@@ -14,6 +14,7 @@ export const Route = createFileRoute("/reset-password")({
       { name: "description", content: "Välj ett nytt lösenord för ditt konto." },
       { property: "og:title", content: "Nytt lösenord – DjurHittaren" },
       { property: "og:description", content: "Välj ett nytt lösenord för ditt konto." },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
     ],
   }),
   component: ResetPage,

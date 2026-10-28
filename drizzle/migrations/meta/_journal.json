@@ -22,6 +22,13 @@
       "when": 1793197807617,
       "tag": "0002_found_reports_and_search",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793201045239,
+      "tag": "0003_private_contact_messaging",
+      "breakpoints": true
     }
   ]
 }

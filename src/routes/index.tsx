@@ -10,6 +10,7 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Registrera ditt husdjur, anmäl det som borttappat och hjälp andra att återförenas med sina djur." },
       { property: "og:title", content: "DjurHittaren – hjälp borttappade djur hitta hem" },
       { property: "og:description", content: "Registrera ditt husdjur och se borttappade djur i ditt område." },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Index,

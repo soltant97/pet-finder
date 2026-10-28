@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
-import { Bell, LogOut, PawPrint, Settings, User } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Bell, LogOut, PawPrint, Settings, User, MessageCircle } from "lucide-react";
+import { useContactLive } from "@/hooks/use-contact-live";
+import { contactData } from "@/lib/contact";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
@@ -16,6 +18,10 @@ export function AppHeader() {
   const { session, ready } = useSession();
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const userId = session?.user.id;
+  useContactLive(userId);
+  const contact = useQuery({ queryKey: ["contact", userId], enabled: !!userId, queryFn: () => contactData(userId ?? "") });
+  const unread = contact.data?.notifications.filter((n) => !n.read_at).length ?? 0;
 
   async function signOut() {
     await qc.cancelQueries();
@@ -50,9 +56,11 @@ export function AppHeader() {
           </Link>
           {ready && session && (
             <>
+              <Button asChild variant="ghost" size="icon" aria-label="Meddelanden"><Link to="/meddelanden"><MessageCircle /></Link></Button>
               <Button asChild variant="ghost" size="icon" aria-label="Notiser">
-                <Link to="/notiser">
+                <Link to="/notiser" className="relative">
                   <Bell />
+                  {unread > 0 && <span className="absolute right-0 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-alert px-0.5 text-[10px] text-alert-foreground">{unread > 9 ? "9+" : unread}</span>}
                 </Link>
               </Button>
               <DropdownMenu>
