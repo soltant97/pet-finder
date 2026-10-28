@@ -9,7 +9,7 @@ import { contactData, contactError, requestStatusLabel, timestamp, uuidSchema } 
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/meddelanden")({
-  validateSearch: (search: Record<string, unknown>): { request?: string } => ({ request: uuidSchema.safeParse(search["request"]).success ? String(search["request"]) : undefined }),
+  validateSearch: (search: Record<string, unknown>): { request?: string | undefined } => ({ request: uuidSchema.safeParse(search["request"]).success ? String(search["request"]) : undefined }),
   head: () => ({ meta: [
     { title: "Meddelanden och förfrågningar – DjurHittaren" }, { name: "description", content: "Dina privata samtal och kontaktförfrågningar om upphittade djur." },
     { property: "og:title", content: "Meddelanden – DjurHittaren" }, { property: "og:description", content: "Säkra privata samtal om djur som saknas." },

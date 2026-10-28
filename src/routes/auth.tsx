@@ -10,7 +10,7 @@ import { Field } from "@/components/Field";
 import { contactReturn } from "@/lib/contact";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search: Record<string, unknown>): { redirect?: string; mode?: "signup" | "login" } => ({ redirect: contactReturn(search["redirect"]), mode: search["mode"] === "signup" ? "signup" : "login" }),
+  validateSearch: (search: Record<string, unknown>): { redirect?: string | undefined; mode?: "signup" | "login" | undefined } => ({ redirect: contactReturn(search["redirect"]), mode: search["mode"] === "signup" ? "signup" : "login" }),
   head: () => ({
     meta: [
       { title: "Logga in – DjurHittaren" },
