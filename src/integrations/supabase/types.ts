@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      found_reports: {
+        Row: {
+          area: string | null
+          city: string | null
+          created_at: string
+          description: string | null
+          finder_id: string
+          found_at: string | null
+          id: string
+          photo_paths: string[]
+          species: Database["public"]["Enums"]["pet_species"] | null
+        }
+        Insert: {
+          area?: string | null
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          finder_id: string
+          found_at?: string | null
+          id?: string
+          photo_paths?: string[]
+          species?: Database["public"]["Enums"]["pet_species"] | null
+        }
+        Update: {
+          area?: string | null
+          city?: string | null
+          created_at?: string
+          description?: string | null
+          finder_id?: string
+          found_at?: string | null
+          id?: string
+          photo_paths?: string[]
+          species?: Database["public"]["Enums"]["pet_species"] | null
+        }
+        Relationships: []
+      }
       lost_reports: {
         Row: {
           circumstances: string
@@ -185,6 +221,28 @@ export type Database = {
       }
       is_lost_pet_photo: { Args: { _path: string }; Returns: boolean }
       is_username_available: { Args: { _username: string }; Returns: boolean }
+      search_lost_pets: {
+        Args: {
+          _found_date?: string
+          _location_term?: string
+          _species?: Database["public"]["Enums"]["pet_species"]
+        }
+        Returns: {
+          age: string
+          breed: string
+          circumstances: string
+          color: string
+          id: string
+          last_location: string
+          last_seen_date: string
+          marks: string
+          name: string
+          photo_paths: string[]
+          reported_at: string
+          sex: Database["public"]["Enums"]["pet_sex"]
+          species: Database["public"]["Enums"]["pet_species"]
+        }[]
+      }
     }
     Enums: {
       pet_sex: "hane" | "hona" | "okant"

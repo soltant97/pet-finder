@@ -14,12 +14,12 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BorttappadeRouteImport } from './routes/borttappade'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as UpphittatRouteImport } from './routes/upphittat'
 import { Route as AuthenticatedInstallningarRouteImport } from './routes/_authenticated/installningar'
 import { Route as AuthenticatedNotiserRouteImport } from './routes/_authenticated/notiser'
 import { Route as AuthenticatedOversiktRouteImport } from './routes/_authenticated/oversikt'
 import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
 import { Route as AuthenticatedRegistreraRouteImport } from './routes/_authenticated/registrera'
-import { Route as AuthenticatedUpphittatRouteImport } from './routes/_authenticated/upphittat'
 import { Route as AuthenticatedMinaDjurIndexRouteImport } from './routes/_authenticated/mina-djur.index'
 import { Route as AuthenticatedMinaDjurIdRouteImport } from './routes/_authenticated/mina-djur.$id'
 
@@ -45,6 +45,11 @@ const BorttappadeRoute = BorttappadeRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UpphittatRoute = UpphittatRouteImport.update({
+  id: '/upphittat',
+  path: '/upphittat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedInstallningarRoute =
@@ -73,11 +78,6 @@ const AuthenticatedRegistreraRoute = AuthenticatedRegistreraRouteImport.update({
   path: '/registrera',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedUpphittatRoute = AuthenticatedUpphittatRouteImport.update({
-  id: '/upphittat',
-  path: '/upphittat',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedMinaDjurIndexRoute =
   AuthenticatedMinaDjurIndexRouteImport.update({
     id: '/mina-djur/',
@@ -95,12 +95,12 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/upphittat': typeof UpphittatRoute
   '/installningar': typeof AuthenticatedInstallningarRoute
   '/notiser': typeof AuthenticatedNotiserRoute
   '/oversikt': typeof AuthenticatedOversiktRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/registrera': typeof AuthenticatedRegistreraRoute
-  '/upphittat': typeof AuthenticatedUpphittatRoute
   '/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
   '/mina-djur/': typeof AuthenticatedMinaDjurIndexRoute
 }
@@ -109,12 +109,12 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/upphittat': typeof UpphittatRoute
   '/installningar': typeof AuthenticatedInstallningarRoute
   '/notiser': typeof AuthenticatedNotiserRoute
   '/oversikt': typeof AuthenticatedOversiktRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/registrera': typeof AuthenticatedRegistreraRoute
-  '/upphittat': typeof AuthenticatedUpphittatRoute
   '/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
   '/mina-djur': typeof AuthenticatedMinaDjurIndexRoute
 }
@@ -125,12 +125,12 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/upphittat': typeof UpphittatRoute
   '/_authenticated/installningar': typeof AuthenticatedInstallningarRoute
   '/_authenticated/notiser': typeof AuthenticatedNotiserRoute
   '/_authenticated/oversikt': typeof AuthenticatedOversiktRoute
   '/_authenticated/profil': typeof AuthenticatedProfilRoute
   '/_authenticated/registrera': typeof AuthenticatedRegistreraRoute
-  '/_authenticated/upphittat': typeof AuthenticatedUpphittatRoute
   '/_authenticated/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
   '/_authenticated/mina-djur/': typeof AuthenticatedMinaDjurIndexRoute
 }
@@ -141,12 +141,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/borttappade'
     | '/reset-password'
+    | '/upphittat'
     | '/installningar'
     | '/notiser'
     | '/oversikt'
     | '/profil'
     | '/registrera'
-    | '/upphittat'
     | '/mina-djur/$id'
     | '/mina-djur/'
   fileRoutesByTo: FileRoutesByTo
@@ -155,12 +155,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/borttappade'
     | '/reset-password'
+    | '/upphittat'
     | '/installningar'
     | '/notiser'
     | '/oversikt'
     | '/profil'
     | '/registrera'
-    | '/upphittat'
     | '/mina-djur/$id'
     | '/mina-djur'
   id:
@@ -170,12 +170,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/borttappade'
     | '/reset-password'
+    | '/upphittat'
     | '/_authenticated/installningar'
     | '/_authenticated/notiser'
     | '/_authenticated/oversikt'
     | '/_authenticated/profil'
     | '/_authenticated/registrera'
-    | '/_authenticated/upphittat'
     | '/_authenticated/mina-djur/$id'
     | '/_authenticated/mina-djur/'
   fileRoutesById: FileRoutesById
@@ -186,6 +186,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BorttappadeRoute: typeof BorttappadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  UpphittatRoute: typeof UpphittatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -225,6 +226,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/upphittat': {
+      id: '/upphittat'
+      path: '/upphittat'
+      fullPath: '/upphittat'
+      preLoaderRoute: typeof UpphittatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/installningar': {
       id: '/_authenticated/installningar'
       path: '/installningar'
@@ -260,13 +268,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRegistreraRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/upphittat': {
-      id: '/_authenticated/upphittat'
-      path: '/upphittat'
-      fullPath: '/upphittat'
-      preLoaderRoute: typeof AuthenticatedUpphittatRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/mina-djur/': {
       id: '/_authenticated/mina-djur/'
       path: '/mina-djur'
@@ -290,7 +291,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOversiktRoute: typeof AuthenticatedOversiktRoute
   AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
   AuthenticatedRegistreraRoute: typeof AuthenticatedRegistreraRoute
-  AuthenticatedUpphittatRoute: typeof AuthenticatedUpphittatRoute
   AuthenticatedMinaDjurIdRoute: typeof AuthenticatedMinaDjurIdRoute
   AuthenticatedMinaDjurIndexRoute: typeof AuthenticatedMinaDjurIndexRoute
 }
@@ -301,7 +301,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOversiktRoute: AuthenticatedOversiktRoute,
   AuthenticatedProfilRoute: AuthenticatedProfilRoute,
   AuthenticatedRegistreraRoute: AuthenticatedRegistreraRoute,
-  AuthenticatedUpphittatRoute: AuthenticatedUpphittatRoute,
   AuthenticatedMinaDjurIdRoute: AuthenticatedMinaDjurIdRoute,
   AuthenticatedMinaDjurIndexRoute: AuthenticatedMinaDjurIndexRoute,
 }
@@ -315,6 +314,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BorttappadeRoute: BorttappadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  UpphittatRoute: UpphittatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -41,6 +41,13 @@ export function AppHeader() {
           >
             Borttappade djur
           </Link>
+          <Link
+            to="/upphittat"
+            className="hidden rounded-full px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground sm:block"
+            activeProps={{ className: "text-foreground" }}
+          >
+            Upphittat djur
+          </Link>
           {ready && session && (
             <>
               <Button asChild variant="ghost" size="icon" aria-label="Notiser">
