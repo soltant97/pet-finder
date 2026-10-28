@@ -14,9 +14,12 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BorttappadeRouteImport } from './routes/borttappade'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedNotiserRouteImport } from './routes/_authenticated/notiser'
 import { Route as AuthenticatedOversiktRouteImport } from './routes/_authenticated/oversikt'
 import { Route as AuthenticatedRegistreraRouteImport } from './routes/_authenticated/registrera'
+import { Route as AuthenticatedUpphittatRouteImport } from './routes/_authenticated/upphittat'
 import { Route as AuthenticatedMinaDjurIndexRouteImport } from './routes/_authenticated/mina-djur.index'
+import { Route as AuthenticatedMinaDjurIdRouteImport } from './routes/_authenticated/mina-djur.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -42,6 +45,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedNotiserRoute = AuthenticatedNotiserRouteImport.update({
+  id: '/notiser',
+  path: '/notiser',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedOversiktRoute = AuthenticatedOversiktRouteImport.update({
   id: '/oversikt',
   path: '/oversikt',
@@ -52,20 +60,33 @@ const AuthenticatedRegistreraRoute = AuthenticatedRegistreraRouteImport.update({
   path: '/registrera',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedUpphittatRoute = AuthenticatedUpphittatRouteImport.update({
+  id: '/upphittat',
+  path: '/upphittat',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedMinaDjurIndexRoute =
   AuthenticatedMinaDjurIndexRouteImport.update({
     id: '/mina-djur/',
     path: '/mina-djur/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMinaDjurIdRoute = AuthenticatedMinaDjurIdRouteImport.update({
+  id: '/mina-djur/$id',
+  path: '/mina-djur/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/notiser': typeof AuthenticatedNotiserRoute
   '/oversikt': typeof AuthenticatedOversiktRoute
   '/registrera': typeof AuthenticatedRegistreraRoute
+  '/upphittat': typeof AuthenticatedUpphittatRoute
+  '/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
   '/mina-djur/': typeof AuthenticatedMinaDjurIndexRoute
 }
 export interface FileRoutesByTo {
@@ -73,8 +94,11 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/notiser': typeof AuthenticatedNotiserRoute
   '/oversikt': typeof AuthenticatedOversiktRoute
   '/registrera': typeof AuthenticatedRegistreraRoute
+  '/upphittat': typeof AuthenticatedUpphittatRoute
+  '/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
   '/mina-djur': typeof AuthenticatedMinaDjurIndexRoute
 }
 export interface FileRoutesById {
@@ -84,8 +108,11 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/notiser': typeof AuthenticatedNotiserRoute
   '/_authenticated/oversikt': typeof AuthenticatedOversiktRoute
   '/_authenticated/registrera': typeof AuthenticatedRegistreraRoute
+  '/_authenticated/upphittat': typeof AuthenticatedUpphittatRoute
+  '/_authenticated/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
   '/_authenticated/mina-djur/': typeof AuthenticatedMinaDjurIndexRoute
 }
 export interface FileRouteTypes {
@@ -95,8 +122,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/borttappade'
     | '/reset-password'
+    | '/notiser'
     | '/oversikt'
     | '/registrera'
+    | '/upphittat'
+    | '/mina-djur/$id'
     | '/mina-djur/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -104,8 +134,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/borttappade'
     | '/reset-password'
+    | '/notiser'
     | '/oversikt'
     | '/registrera'
+    | '/upphittat'
+    | '/mina-djur/$id'
     | '/mina-djur'
   id:
     | '__root__'
@@ -114,8 +147,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/borttappade'
     | '/reset-password'
+    | '/_authenticated/notiser'
     | '/_authenticated/oversikt'
     | '/_authenticated/registrera'
+    | '/_authenticated/upphittat'
+    | '/_authenticated/mina-djur/$id'
     | '/_authenticated/mina-djur/'
   fileRoutesById: FileRoutesById
 }
@@ -164,6 +200,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/notiser': {
+      id: '/_authenticated/notiser'
+      path: '/notiser'
+      fullPath: '/notiser'
+      preLoaderRoute: typeof AuthenticatedNotiserRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/oversikt': {
       id: '/_authenticated/oversikt'
       path: '/oversikt'
@@ -178,6 +221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRegistreraRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/upphittat': {
+      id: '/_authenticated/upphittat'
+      path: '/upphittat'
+      fullPath: '/upphittat'
+      preLoaderRoute: typeof AuthenticatedUpphittatRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/mina-djur/': {
       id: '/_authenticated/mina-djur/'
       path: '/mina-djur'
@@ -185,18 +235,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMinaDjurIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/mina-djur/$id': {
+      id: '/_authenticated/mina-djur/$id'
+      path: '/mina-djur/$id'
+      fullPath: '/mina-djur/$id'
+      preLoaderRoute: typeof AuthenticatedMinaDjurIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedNotiserRoute: typeof AuthenticatedNotiserRoute
   AuthenticatedOversiktRoute: typeof AuthenticatedOversiktRoute
   AuthenticatedRegistreraRoute: typeof AuthenticatedRegistreraRoute
+  AuthenticatedUpphittatRoute: typeof AuthenticatedUpphittatRoute
+  AuthenticatedMinaDjurIdRoute: typeof AuthenticatedMinaDjurIdRoute
   AuthenticatedMinaDjurIndexRoute: typeof AuthenticatedMinaDjurIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedNotiserRoute: AuthenticatedNotiserRoute,
   AuthenticatedOversiktRoute: AuthenticatedOversiktRoute,
   AuthenticatedRegistreraRoute: AuthenticatedRegistreraRoute,
+  AuthenticatedUpphittatRoute: AuthenticatedUpphittatRoute,
+  AuthenticatedMinaDjurIdRoute: AuthenticatedMinaDjurIdRoute,
   AuthenticatedMinaDjurIndexRoute: AuthenticatedMinaDjurIndexRoute,
 }
 
