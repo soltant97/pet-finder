@@ -16,21 +16,19 @@ Resultaten är **möjliga liknande djur**, aldrig bekräftad identitet eller en 
 
 **Kontrollpunkt:** fungerande bildembedding och säker bildrensning måste vara verifierade innan databasschema, lagringsregler eller gränssnitt ändras.
 
-## Fas 2 – säker hantering och begränsad referensindexering
-- En pilotmarkering begränsar AI-funktionen till inloggade, uttryckligen tillåtna testkonton. Den är ingen ny användarroll och ger inte åtkomst till andra användares privata uppgifter.
-- Piloten omfattar befintliga registrerade djur vars ägare godkänt deltagande. Varje referensfoto får en separat embedding, även när djuret inte är borttappat; sådan indexering gör inte fotot sökbart eller offentligt.
-- Ägarens foto-ID kontrolleras mot befintlig ägarrelation innan servern hämtar fotot. Klienten får inte skicka godtyckliga lagringssökvägar eller externa URL:er.
-- Referensbilder avkodas, orienteras och återkodas utan EXIF/GPS innan de skickas till AI. Piloten ändrar eller raderar inte originalbilderna automatiskt. Inga originalfiler skickas till AI.
-- Indexering sker i små, återupptagbara batcher med innehållshash och modell-/behandlingsversion. Redan aktuella embeddings återanvänds. Fotoändring eller borttagning gör tillhörande index ogiltigt/raderat. Ingen återkommande polling för att upptäcka nya foton.
-- En sökbild hanteras i serverminnet och skickas efter rensning direkt till embedding-tjänsten om fas 1 verifierar det. **Ingen permanent uppladdning och ingen `found_reports`-rad skapas av AI-sökningen.** Sökbild och sökvektor släpps efter avslutat anrop, fel eller avbrott och skrivs inte till loggar.
-- Om privat mellanlagring visar sig nödvändig återkommer vi med ett separat beslut om privat temporär behållare, verifierad åtkomst och gallring. Ingen sådan lagring införs tyst.
+## Fas 2 – säker hantering och referensindexering
+- AI är endast tillgänglig för inloggade, tillåtna pilotkonton. Ägaren godkänner indexering av sina registrerade djur. Indexering gör aldrig ett privat djur sökbart.
+- Varje foto får en separat embedding. Servern verifierar foto-ID mot ägarrelationen; godtyckliga sökvägar/URL:er accepteras inte.
+- Referenser avkodas, orienteras och återkodas utan EXIF/GPS innan AI. Originalbilderna ändras inte automatiskt och skickas inte till AI.
+- Små återupptagbara batcher, innehållshash och modell-/behandlingsversion undviker dubbel debitering. Ändring/borttagning gör index ogiltigt. Ingen återkommande polling för nya foton.
+- Sökbild och sökvektor hålls endast i serverminnet under anropet och loggas inte. Ingen permanent uppladdning eller `found_reports`-rad skapas av AI-sökningen. Minnesreferenser släpps efter slut, fel eller avbrott.
+- Om privat mellanlagring krävs: stoppa och begär separat godkännande för temporär behållare, åtkomst och tidsstyrd radering. Den införs inte tyst.
 
-### Validering och föreslagna pilotgränser
-- Servern kontrollerar autentisering, pilottillgång, deklarerad och verklig filtyp, avkodning, 5 MB per bild, högst 20 megapixlar och en sökbild per anrop.
-- Normalisera till JPEG med längst sida högst 1024 pixlar; kontrollera att pälsdetaljer inte försämrar träffarna. Metadata tas bort genom återkodning, inte enbart ändrad filändelse.
-- Föreslagna gränser: 5 AI-sökningar per konto och timme, 20 per dag och ett pågående AI-jobb per konto. Referensindexering har separat begränsning och får inte kringgå arbetsytans budget.
-- Backend har **ingen standardfunktion för rate limiting**. Planen föreslår därför en egen atomisk databasbaserad begränsning. Godkännande av planen bekräftar denna avvägning: den stoppar AI-anrop och kostnadsmissbruk efter autentisering, men ersätter inte ett heltäckande skydd mot överbelastning eller många nyregistrerade konton.
-- Beständig pausmarkering stoppar alla AI-ingångar vid kredit-/policyblockering. Endast 429/5xx får begränsade, fördröjda återförsök. Nekad åtkomst, saknad modell och andra terminala fel stoppar arbetet utan modellbyte.
+### Föreslagna pilotgränser
+- Servervalidera autentisering/pilottillgång, faktisk filtyp, avkodning, 5 MB, högst 20 megapixlar och en sökbild. Normalisera till JPEG, längst sida 1024 pixlar; testa att pälsdetaljer bevaras.
+- 5 sökningar/konto/timme, 20/dag, ett pågående jobb/konto. Referensindexering begränsas separat men delar arbetsytans budget.
+- Backend saknar standardfunktion för rate limiting. Godkännande av planen bekräftar en **egen atomisk databasbaserad begränsning**: beständig och serverkontrollerad, men inte ett komplett överbelastningsskydd eller skydd mot många nyregistrerade konton.
+- Kredit-/policyblockering pausar alla AI-ingångar beständigt. Endast 429/5xx får begränsade, fördröjda återförsök. Terminala fel stoppar arbetet utan modellbyte.
 
 ## Fas 3 – visuell sökning med befintliga filter
 1. Servern validerar djurslag, ungefärligt område/ort, datum och övriga angivna djuruppgifter.
@@ -66,17 +64,17 @@ Resultaten är **möjliga liknande djur**, aldrig bekräftad identitet eller en 
 
 ## Fas 5 – verkliga tester och beslut om pilotöppning
 ### Träffsäkerhet
-- Samtyckt dataset: minst 20 katter och 20 hundar, 2–3 referensbilder och två separata sökbilder per djur. Inkludera olika vinklar/ljus och flera olika djur med mycket lik färg/ras. Sökbilder får inte vara kopior av referensbilderna.
-- Använd en utvecklingsdel för aggregation/tröskelval och en orörd utvärderingsdel. Testa också bilder på djur som inte finns i registret och ofullständiga platsuppgifter.
-- Mät **Recall@1, @5 och @10**: andel sökbilder där rätt djur finns bland respektive första kandidater. Redovisa nämnare, resultat per djurslag, fel på liknande djur, svarstid och faktisk kostnad.
-- Mät filterträffar separat: om plats-/datumfilter tar bort rätt djur ska detta inte döljas som ett bildmodellfel. Jämför hybrid mot befintlig sökning på samma dataset.
-- Föreslagen kontrollpunkt för fortsatt begränsad pilot: Recall@5 minst 80 % på den orörda delen med korrekt kandidatfilter, inga säkerhetsfel och redovisning av samtliga felträffar. Detta är ett testmål, inte ett löfte. Ingen automatisk identitetsbekräftelse även om målet nås.
+- Samtyckt dataset: minst 20 katter och 20 hundar, 2–3 referensbilder och två separata sökbilder/djur. Olika vinklar/ljus och djur med liknande färg/ras. Inga kopior av referensbilder som sökbilder.
+- Separera utvecklingsdel från orörd utvärderingsdel. Testa även djur som saknas i registret och ofullständiga platsuppgifter.
+- **Recall@1/@5/@10** = andel sökbilder där rätt djur finns bland första 1/5/10 kandidater. Redovisa nämnare, resultat per djurslag, felträffar på liknande djur, svarstid och verklig kostnad.
+- Redovisa filterbortfall separat och jämför med vanlig sökning på samma dataset. Jämför bästa-foto-aggregation mot medelvärdet av två bästa innan regeln ändras.
+- Föreslagen öppningsgräns: Recall@5 minst 80 % på orörd del med korrekt kandidatfilter, inga säkerhetsfel och redovisade felträffar. Detta är ett testmål, inte ett löfte eller stöd för automatisk identitetsbekräftelse.
 
 ### Säkerhet och regression
-- Två deltagare och en tredje användare: nekad AI-åtkomst utan login/pilottillgång, nekad åtkomst till annans privata bild/vektor och direkt SQL/RPC-kringgång.
-- Djuret registreras med foton, markeras borttappat, hittas med en annan bild, öppnas och kontaktas genom befintligt flöde. Återförening tar bort nya sökträffar och bevarar samtal.
-- Testa EXIF/GPS i faktisk utdata, felaktig MIME, trasig fil, stor bild, samtidig kvotreservation, avbrutet jobb, terminala AI-fel och att inga bilddata finns kvar i appens lagring/loggar.
-- Kontrollera mobil/desktop, tomma resultat, utebliven indexering och att vanlig gäst-sökning och ägarens CRUD inte försämrats.
+- Två deltagare plus tredje användare: neka AI utan login/pilottillgång, annans privata foton/vektorer och direkt RPC-kringgång.
+- Registrera → borttappad → matcha annan bild → öppna profil → kontakta ägare. Återfunnet djur ska försvinna från nya träffar utan att samtalet försvinner.
+- Testa EXIF/GPS i faktisk utdata, falsk MIME, trasiga/stora bilder, samtidiga kvotreservationer, avbrott, terminala AI-fel och frånvaro av kvarvarande sökbild i lagring/loggar.
+- Testa mobil/desktop, tomma resultat, saknat index och fortsatt fungerande vanlig gästsökning/ägar-CRUD.
 
 ## Kostnader, sekretess och kvarstående osäkerheter
 - Embedding-anrop, referensindexering, serverarbete, databas och bildtrafik använder Cloud/AI-credits. Inga köp eller planuppgraderingar sker automatiskt. Referenser beräknas en gång per ändrad bild, inte per sökning.
