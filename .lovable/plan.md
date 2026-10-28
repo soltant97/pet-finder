@@ -38,12 +38,12 @@ Resultaten är **möjliga liknande djur**, aldrig bekräftad identitet eller en 
 5. Utöka område → ort/kommun → Sverige. Inga kilometer från textplatser. Återförening stoppar nya träffar men påverkar inte samtal.
 6. Returnera endast tillåtna djurfält, foto-ID/visningsreferens och rang. Inga embeddings, privata sökvägar, ägaruppgifter, chipnummer eller upphittarbilder. Kandidatbilder visas med kontroll av aktuell status utan utlämnade privata sökvägar.
 
-## Fas 4 – gränssnitt i befintlig svensk design
-- Lägg till ett tydligt val i ”Upphittat djur”: vanlig sökning respektive ”Bildsökning – pilot”. AI-valet är endast aktivt för tillåtna inloggade konton. Vanlig sökning förblir tillgänglig för alla.
-- Återanvänd kamera, förhandsvisning, filter och resultatkort. AI väljer en bild; vanlig flersbildsrapportering ändras inte.
-- Visa laddning, avbryt, kvot, fel, ej indexerade referenser och tomma resultat. Behåll återgång till vanlig sökning.
-- Upplys om att bilden behandlas tillfälligt och jämförelsen inte bekräftar djurets identitet.
-- Återanvänd offentlig profil, ”Kontakta ägaren”, förfrågan och privat samtal. Ingen automatisk kontakt.
+## Fas 4 – befintligt svenskt gränssnitt
+- ”Upphittat djur” får val mellan vanlig sökning och ”Bildsökning – pilot”, endast aktiv för tillåtna konton. Ingen redesign.
+- Återanvänd kamera, förhandsvisning, filter och resultatkort. AI använder en bild; vanlig flersbildsrapportering ändras inte.
+- Visa laddning, avbryt, kvot, fel, saknat index och tomma resultat; erbjud vanlig sökning som reservväg.
+- Informera om tillfällig bildbehandling och att likhet inte bekräftar identitet.
+- Återanvänd offentlig profil och kontaktförfrågan/privat samtal. Ingen automatisk kontakt.
 
 ## Tekniska förändringar
 ### Databas – endast tillägg
