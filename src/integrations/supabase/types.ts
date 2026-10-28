@@ -14,16 +14,182 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      lost_reports: {
+        Row: {
+          circumstances: string
+          created_at: string
+          last_location: string
+          last_seen_date: string
+          owner_id: string
+          pet_id: string
+          updated_at: string
+        }
+        Insert: {
+          circumstances: string
+          created_at?: string
+          last_location: string
+          last_seen_date: string
+          owner_id: string
+          pet_id: string
+          updated_at?: string
+        }
+        Update: {
+          circumstances?: string
+          created_at?: string
+          last_location?: string
+          last_seen_date?: string
+          owner_id?: string
+          pet_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lost_reports_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: true
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pet_photos: {
+        Row: {
+          created_at: string
+          id: string
+          owner_id: string
+          pet_id: string
+          position: number
+          storage_path: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          owner_id: string
+          pet_id: string
+          position?: number
+          storage_path: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          owner_id?: string
+          pet_id?: string
+          position?: number
+          storage_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pet_photos_pet_id_fkey"
+            columns: ["pet_id"]
+            isOneToOne: false
+            referencedRelation: "pets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pets: {
+        Row: {
+          age: string | null
+          breed: string | null
+          color: string
+          created_at: string
+          description: string | null
+          id: string
+          marks: string | null
+          microchip: string | null
+          name: string
+          owner_id: string
+          sex: Database["public"]["Enums"]["pet_sex"]
+          species: Database["public"]["Enums"]["pet_species"]
+          status: Database["public"]["Enums"]["pet_status"]
+          updated_at: string
+        }
+        Insert: {
+          age?: string | null
+          breed?: string | null
+          color: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          marks?: string | null
+          microchip?: string | null
+          name: string
+          owner_id: string
+          sex?: Database["public"]["Enums"]["pet_sex"]
+          species: Database["public"]["Enums"]["pet_species"]
+          status?: Database["public"]["Enums"]["pet_status"]
+          updated_at?: string
+        }
+        Update: {
+          age?: string | null
+          breed?: string | null
+          color?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          marks?: string | null
+          microchip?: string | null
+          name?: string
+          owner_id?: string
+          sex?: Database["public"]["Enums"]["pet_sex"]
+          species?: Database["public"]["Enums"]["pet_species"]
+          status?: Database["public"]["Enums"]["pet_status"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          id: string
+          updated_at: string
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          updated_at?: string
+          username: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          updated_at?: string
+          username?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_username: { Args: never; Returns: string }
+      get_lost_pets: {
+        Args: never
+        Returns: {
+          age: string
+          breed: string
+          circumstances: string
+          color: string
+          id: string
+          last_location: string
+          last_seen_date: string
+          marks: string
+          name: string
+          photo_paths: string[]
+          reported_at: string
+          sex: Database["public"]["Enums"]["pet_sex"]
+          species: Database["public"]["Enums"]["pet_species"]
+        }[]
+      }
+      is_lost_pet_photo: { Args: { _path: string }; Returns: boolean }
+      is_username_available: { Args: { _username: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      pet_sex: "hane" | "hona" | "okant"
+      pet_species: "katt" | "hund" | "annat"
+      pet_status: "registrerad" | "borttappad" | "aterfunnen"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +316,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      pet_sex: ["hane", "hona", "okant"],
+      pet_species: ["katt", "hund", "annat"],
+      pet_status: ["registrerad", "borttappad", "aterfunnen"],
+    },
   },
 } as const
