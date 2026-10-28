@@ -14,8 +14,10 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BorttappadeRouteImport } from './routes/borttappade'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthenticatedInstallningarRouteImport } from './routes/_authenticated/installningar'
 import { Route as AuthenticatedNotiserRouteImport } from './routes/_authenticated/notiser'
 import { Route as AuthenticatedOversiktRouteImport } from './routes/_authenticated/oversikt'
+import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
 import { Route as AuthenticatedRegistreraRouteImport } from './routes/_authenticated/registrera'
 import { Route as AuthenticatedUpphittatRouteImport } from './routes/_authenticated/upphittat'
 import { Route as AuthenticatedMinaDjurIndexRouteImport } from './routes/_authenticated/mina-djur.index'
@@ -45,6 +47,12 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedInstallningarRoute =
+  AuthenticatedInstallningarRouteImport.update({
+    id: '/installningar',
+    path: '/installningar',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedNotiserRoute = AuthenticatedNotiserRouteImport.update({
   id: '/notiser',
   path: '/notiser',
@@ -53,6 +61,11 @@ const AuthenticatedNotiserRoute = AuthenticatedNotiserRouteImport.update({
 const AuthenticatedOversiktRoute = AuthenticatedOversiktRouteImport.update({
   id: '/oversikt',
   path: '/oversikt',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfilRoute = AuthenticatedProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedRegistreraRoute = AuthenticatedRegistreraRouteImport.update({
@@ -82,8 +95,10 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/installningar': typeof AuthenticatedInstallningarRoute
   '/notiser': typeof AuthenticatedNotiserRoute
   '/oversikt': typeof AuthenticatedOversiktRoute
+  '/profil': typeof AuthenticatedProfilRoute
   '/registrera': typeof AuthenticatedRegistreraRoute
   '/upphittat': typeof AuthenticatedUpphittatRoute
   '/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
@@ -94,8 +109,10 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/installningar': typeof AuthenticatedInstallningarRoute
   '/notiser': typeof AuthenticatedNotiserRoute
   '/oversikt': typeof AuthenticatedOversiktRoute
+  '/profil': typeof AuthenticatedProfilRoute
   '/registrera': typeof AuthenticatedRegistreraRoute
   '/upphittat': typeof AuthenticatedUpphittatRoute
   '/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
@@ -108,8 +125,10 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/installningar': typeof AuthenticatedInstallningarRoute
   '/_authenticated/notiser': typeof AuthenticatedNotiserRoute
   '/_authenticated/oversikt': typeof AuthenticatedOversiktRoute
+  '/_authenticated/profil': typeof AuthenticatedProfilRoute
   '/_authenticated/registrera': typeof AuthenticatedRegistreraRoute
   '/_authenticated/upphittat': typeof AuthenticatedUpphittatRoute
   '/_authenticated/mina-djur/$id': typeof AuthenticatedMinaDjurIdRoute
@@ -122,8 +141,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/borttappade'
     | '/reset-password'
+    | '/installningar'
     | '/notiser'
     | '/oversikt'
+    | '/profil'
     | '/registrera'
     | '/upphittat'
     | '/mina-djur/$id'
@@ -134,8 +155,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/borttappade'
     | '/reset-password'
+    | '/installningar'
     | '/notiser'
     | '/oversikt'
+    | '/profil'
     | '/registrera'
     | '/upphittat'
     | '/mina-djur/$id'
@@ -147,8 +170,10 @@ export interface FileRouteTypes {
     | '/auth'
     | '/borttappade'
     | '/reset-password'
+    | '/_authenticated/installningar'
     | '/_authenticated/notiser'
     | '/_authenticated/oversikt'
+    | '/_authenticated/profil'
     | '/_authenticated/registrera'
     | '/_authenticated/upphittat'
     | '/_authenticated/mina-djur/$id'
@@ -200,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/installningar': {
+      id: '/_authenticated/installningar'
+      path: '/installningar'
+      fullPath: '/installningar'
+      preLoaderRoute: typeof AuthenticatedInstallningarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/notiser': {
       id: '/_authenticated/notiser'
       path: '/notiser'
@@ -212,6 +244,13 @@ declare module '@tanstack/react-router' {
       path: '/oversikt'
       fullPath: '/oversikt'
       preLoaderRoute: typeof AuthenticatedOversiktRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profil': {
+      id: '/_authenticated/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof AuthenticatedProfilRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/registrera': {
@@ -246,8 +285,10 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedInstallningarRoute: typeof AuthenticatedInstallningarRoute
   AuthenticatedNotiserRoute: typeof AuthenticatedNotiserRoute
   AuthenticatedOversiktRoute: typeof AuthenticatedOversiktRoute
+  AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
   AuthenticatedRegistreraRoute: typeof AuthenticatedRegistreraRoute
   AuthenticatedUpphittatRoute: typeof AuthenticatedUpphittatRoute
   AuthenticatedMinaDjurIdRoute: typeof AuthenticatedMinaDjurIdRoute
@@ -255,8 +296,10 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedInstallningarRoute: AuthenticatedInstallningarRoute,
   AuthenticatedNotiserRoute: AuthenticatedNotiserRoute,
   AuthenticatedOversiktRoute: AuthenticatedOversiktRoute,
+  AuthenticatedProfilRoute: AuthenticatedProfilRoute,
   AuthenticatedRegistreraRoute: AuthenticatedRegistreraRoute,
   AuthenticatedUpphittatRoute: AuthenticatedUpphittatRoute,
   AuthenticatedMinaDjurIdRoute: AuthenticatedMinaDjurIdRoute,
