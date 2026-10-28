@@ -3,7 +3,7 @@
 ## Mål och avgränsning
 Inloggade pilottestare jämför en bild med **Borttappade** djur. Befintliga filter, privat lagring, profiler och kontakt återanvänds. Vanlig gästsökning ändras inte.
 
-Resultaten är **möjliga liknande djur**, aldrig bekräftad identitet eller en kalibrerad sannolikhet. Ingen ny textanalysmodell, extern vektordatabas eller betald bildtjänst ingår.
+Resultat är **möjliga liknande djur**, inte identitetsbevis. Ingen extern vektordatabas eller bildtjänst ingår.
 
 **Endast planering nu.** Godkännande startar fas 1. Fortsättning kräver klarade kontrollpunkter; nya externa tjänster kräver nytt godkännande.
 
