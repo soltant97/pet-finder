@@ -16,3 +16,5 @@
 - A pet may only have status 'borttappad' when a lost_reports row exists (DB trigger); leaving lost status deletes the report. Why: listings always have location/date.
 - Public usernames are generated server-side on signup (word + 4 digits) and live in `profiles`; email stays in auth only. Why: usernames never derive from personal data.
 - All user-facing text is Swedish.
+- Found-pet search goes only through SECURITY DEFINER RPC `search_lost_pets()` (status = 'borttappad' enforced in SQL, same safe columns as get_lost_pets). Locations are free text, so "radius" is text levels (area → town → all of Sweden); never show distances until coordinates exist. Ranking by color/breed/marks is plain word overlap, not AI.
+- Guest finders' photos stay in the browser; signed-in finders' reports go to owner-only `found_reports` with photos under `<userId>/found/<reportId>/…`. Why: the bucket has no safe anonymous upload path.

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { CalendarDays, Info, Loader2, LocateFixed, MapPin, PawPrint, RotateCcw, Search, Expand, Pencil } from "lucide-react";
 import { PageShell } from "@/components/AppHeader";
@@ -283,12 +283,15 @@ function FilePreview({ file }: { file: File }) {
 
 function PetDialog({ pet, onClose }: { pet: Match | null; onClose: () => void }) {
   const [urls, setUrls] = useState<string[]>([]);
-  const [loadedFor, setLoadedFor] = useState<string | null>(null);
-  if (pet && loadedFor !== pet.id) {
-    setLoadedFor(pet.id);
+  useEffect(() => {
     setUrls([]);
-    signedUrls(pet.photo_paths).then((m) => setUrls(pet.photo_paths.map((p) => m[p]).filter((x): x is string => !!x))).catch(() => setUrls([]));
-  }
+    if (!pet) return;
+    let live = true;
+    signedUrls(pet.photo_paths)
+      .then((m) => live && setUrls(pet.photo_paths.map((p) => m[p]).filter((x): x is string => !!x)))
+      .catch(() => undefined);
+    return () => { live = false; };
+  }, [pet]);
   return (
     <Dialog open={!!pet} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">

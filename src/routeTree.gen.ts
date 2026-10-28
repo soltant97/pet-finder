@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BorttappadeRouteImport } from './routes/borttappade'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as UpphittatRouteImport } from './routes/upphittat'
 import { Route as AuthenticatedInstallningarRouteImport } from './routes/_authenticated/installningar'
 import { Route as AuthenticatedNotiserRouteImport } from './routes/_authenticated/notiser'
 import { Route as AuthenticatedOversiktRouteImport } from './routes/_authenticated/oversikt'
@@ -44,6 +45,11 @@ const BorttappadeRoute = BorttappadeRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UpphittatRoute = UpphittatRouteImport.update({
+  id: '/upphittat',
+  path: '/upphittat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedInstallningarRoute =
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/upphittat': typeof UpphittatRoute
   '/installningar': typeof AuthenticatedInstallningarRoute
   '/notiser': typeof AuthenticatedNotiserRoute
   '/oversikt': typeof AuthenticatedOversiktRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/upphittat': typeof UpphittatRoute
   '/installningar': typeof AuthenticatedInstallningarRoute
   '/notiser': typeof AuthenticatedNotiserRoute
   '/oversikt': typeof AuthenticatedOversiktRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/borttappade': typeof BorttappadeRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/upphittat': typeof UpphittatRoute
   '/_authenticated/installningar': typeof AuthenticatedInstallningarRoute
   '/_authenticated/notiser': typeof AuthenticatedNotiserRoute
   '/_authenticated/oversikt': typeof AuthenticatedOversiktRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/borttappade'
     | '/reset-password'
+    | '/upphittat'
     | '/installningar'
     | '/notiser'
     | '/oversikt'
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/borttappade'
     | '/reset-password'
+    | '/upphittat'
     | '/installningar'
     | '/notiser'
     | '/oversikt'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/borttappade'
     | '/reset-password'
+    | '/upphittat'
     | '/_authenticated/installningar'
     | '/_authenticated/notiser'
     | '/_authenticated/oversikt'
@@ -174,6 +186,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   BorttappadeRoute: typeof BorttappadeRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  UpphittatRoute: typeof UpphittatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -211,6 +224,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/upphittat': {
+      id: '/upphittat'
+      path: '/upphittat'
+      fullPath: '/upphittat'
+      preLoaderRoute: typeof UpphittatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/installningar': {
@@ -294,6 +314,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   BorttappadeRoute: BorttappadeRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  UpphittatRoute: UpphittatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
