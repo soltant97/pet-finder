@@ -13,10 +13,10 @@ export function LostForm({
   onSubmit,
   onCancel,
 }: {
-  initial?: Partial<LostInput>;
+  initial?: Partial<LostInput> | undefined;
   submitLabel: string;
   onSubmit: (v: z.output<typeof lostSchema>) => Promise<void>;
-  onCancel?: () => void;
+  onCancel?: (() => void) | undefined;
 }) {
   const [v, setV] = useState<LostInput>({
     last_location: initial?.last_location ?? "",

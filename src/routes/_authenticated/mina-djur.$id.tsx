@@ -86,7 +86,7 @@ function PetDetail({ pet, back, refresh }: { pet: PetData; back: React.ReactNode
     const { error } = await supabase.from("pets").update({ status }).eq("id", pet.id);
     if (!error && status !== "borttappad") await supabase.from("lost_reports").delete().eq("pet_id", pet.id);
     setBusy(false);
-    if (error) return toast.error("Kunde inte ändra status.");
+    if (error) return void toast.error("Kunde inte ändra status.");
     toast.success(status === "aterfunnen" ? `Vad härligt att ${pet.name} är hemma igen!` : "Status uppdaterad");
     await refresh();
   }
@@ -107,7 +107,7 @@ function PetDetail({ pet, back, refresh }: { pet: PetData; back: React.ReactNode
   async function deletePet() {
     if (pet.photos.length) await supabase.storage.from(BUCKET).remove(pet.photos.map((p) => p.storage_path));
     const { error } = await supabase.from("pets").delete().eq("id", pet.id);
-    if (error) return toast.error("Kunde inte ta bort djuret.");
+    if (error) return void toast.error("Kunde inte ta bort djuret.");
     await refresh();
     toast.success(`${pet.name} har tagits bort`);
     navigate({ to: "/mina-djur" });
@@ -225,7 +225,7 @@ function EditPet({ pet, onDone }: { pet: PetData; onDone: () => Promise<void> })
     setBusy(true);
     const { error } = await supabase.from("pets").update(data).eq("id", pet.id);
     setBusy(false);
-    if (error) return toast.error("Kunde inte spara ändringarna.");
+    if (error) return void toast.error("Kunde inte spara ändringarna.");
     toast.success("Ändringarna är sparade");
     await onDone();
   }
@@ -263,9 +263,9 @@ function Photos({ pet, refresh }: { pet: PetData; refresh: () => Promise<unknown
   }
 
   async function remove(photo: PetData["photos"][number]) {
-    if (pet.photos.length <= 1) return toast.error("Ditt djur måste ha minst en bild.");
+    if (pet.photos.length <= 1) return void toast.error("Ditt djur måste ha minst en bild.");
     const { error } = await supabase.from("pet_photos").delete().eq("id", photo.id);
-    if (error) return toast.error("Kunde inte ta bort bilden.");
+    if (error) return void toast.error("Kunde inte ta bort bilden.");
     await supabase.storage.from(BUCKET).remove([photo.storage_path]);
     setActive(0);
     await refresh();

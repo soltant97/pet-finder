@@ -52,10 +52,10 @@ function AuthPage() {
     e.preventDefault();
     const errs: { email?: string; password?: string } = {};
     const em = emailS.safeParse(email);
-    if (!em.success) errs.email = em.error.issues[0].message;
+    if (!em.success) errs.email = em.error.issues[0]?.message ?? "";
     if (mode !== "forgot") {
       const pw = pwS.safeParse(password);
-      if (!pw.success) errs.password = pw.error.issues[0].message;
+      if (!pw.success) errs.password = pw.error.issues[0]?.message ?? "";
     }
     setErrors(errs);
     if (Object.keys(errs).length) return;

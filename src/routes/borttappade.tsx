@@ -24,7 +24,7 @@ export const Route = createFileRoute("/borttappade")({
 async function fetchLost() {
   const { data, error } = await supabase.rpc("get_lost_pets");
   if (error) throw error;
-  const covers = data.map((p) => p.photo_paths[0]).filter(Boolean);
+  const covers = data.map((p) => p.photo_paths[0]).filter((x): x is string => !!x);
   const urls = await signedUrls(covers);
   return data.map((p) => ({ ...p, cover: p.photo_paths[0] ? urls[p.photo_paths[0]] : undefined }));
 }
