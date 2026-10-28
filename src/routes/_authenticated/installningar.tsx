@@ -16,6 +16,7 @@ export const Route = createFileRoute("/_authenticated/installningar")({
       { name: "description", content: "Kontoinställningar." },
       { property: "og:title", content: "Inställningar – DjurHittaren" },
       { property: "og:description", content: "Kontoinställningar." },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
     ],
   }),
   component: SettingsPage,

@@ -10,13 +10,14 @@ import { Field } from "@/components/Field";
 import { contactReturn } from "@/lib/contact";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search: Record<string, unknown>) => ({ redirect: contactReturn(search.redirect), mode: search.mode === "signup" ? "signup" as const : "login" as const }),
+  validateSearch: (search: Record<string, unknown>): { redirect?: string; mode?: "signup" | "login" } => ({ redirect: contactReturn(search["redirect"]), mode: search["mode"] === "signup" ? "signup" : "login" }),
   head: () => ({
     meta: [
       { title: "Logga in – DjurHittaren" },
       { name: "description", content: "Logga in eller skapa ett konto på DjurHittaren." },
       { property: "og:title", content: "Logga in – DjurHittaren" },
       { property: "og:description", content: "Logga in eller skapa ett konto på DjurHittaren." },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
     ],
   }),
   component: AuthPage,
@@ -38,7 +39,7 @@ function translate(msg: string) {
 function AuthPage() {
   const navigate = useNavigate();
   const search = Route.useSearch();
-  const [mode, setMode] = useState<Mode>(search.mode);
+  const [mode, setMode] = useState<Mode>(search.mode ?? "login");
   function finishLogin() {
     if (search.redirect) navigate({ to: "/djur/$id", params: { id: search.redirect.slice(6) }, replace: true });
     else navigate({ to: "/oversikt", replace: true });

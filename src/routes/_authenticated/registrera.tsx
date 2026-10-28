@@ -18,6 +18,7 @@ export const Route = createFileRoute("/_authenticated/registrera")({
       { name: "description", content: "Registrera ditt husdjur med bilder och kännetecken." },
       { property: "og:title", content: "Registrera ditt djur – DjurHittaren" },
       { property: "og:description", content: "Registrera ditt husdjur med bilder och kännetecken." },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
     ],
   }),
   component: RegisterPage,

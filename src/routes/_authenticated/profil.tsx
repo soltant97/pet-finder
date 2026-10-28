@@ -16,6 +16,7 @@ export const Route = createFileRoute("/_authenticated/profil")({
       { name: "description", content: "Ditt användarnamn på DjurHittaren." },
       { property: "og:title", content: "Profil – DjurHittaren" },
       { property: "og:description", content: "Ditt användarnamn på DjurHittaren." },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
     ],
   }),
   component: ProfilePage,

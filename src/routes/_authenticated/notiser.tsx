@@ -14,6 +14,7 @@ export const Route = createFileRoute("/_authenticated/notiser")({
       { name: "description", content: "Dina notiser." },
       { property: "og:title", content: "Notiser – DjurHittaren" },
       { property: "og:description", content: "Dina notiser." },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Notifications,

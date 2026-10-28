@@ -15,6 +15,7 @@ export const Route = createFileRoute("/_authenticated/mina-djur/")({
       { name: "description", content: "Dina registrerade husdjur." },
       { property: "og:title", content: "Dina djur – DjurHittaren" },
       { property: "og:description", content: "Dina registrerade husdjur." },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
     ],
   }),
   component: MyPets,

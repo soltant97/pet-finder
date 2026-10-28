@@ -17,6 +17,7 @@ export const Route = createFileRoute("/borttappade")({
       { name: "description", content: "Se katter, hundar och andra husdjur som just nu saknas. Har du sett något av dem?" },
       { property: "og:title", content: "Borttappade djur – DjurHittaren" },
       { property: "og:description", content: "Husdjur som just nu saknas. Har du sett något av dem?" },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
     ],
   }),
   component: LostPage,

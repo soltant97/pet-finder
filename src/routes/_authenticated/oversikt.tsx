@@ -11,6 +11,7 @@ export const Route = createFileRoute("/_authenticated/oversikt")({
       { name: "description", content: "Din översikt på DjurHittaren." },
       { property: "og:title", content: "Översikt – DjurHittaren" },
       { property: "og:description", content: "Din översikt på DjurHittaren." },
+      { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Dashboard,
